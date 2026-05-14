@@ -6,6 +6,9 @@ when:
 
 steps:
   - name: build-and-push-ghcr
+    when:
+      - event: manual
+      - event: push
     image: gcr.io/kaniko-project/executor:v1.24.0-debug@sha256:2562c4fe551399514277ffff7dcca9a3b1628c4ea38cb017d7286dc6ea52f4cd
     environment:
       GHCR_TOKEN:
@@ -30,6 +33,9 @@ steps:
         --snapshot-mode=redo
 
   - name: trivy-scan
+    when:
+      - event: manual
+      - event: push
     failure: ignore
     image: dhi.io/trivy:0.70.0-alpine3.23-dev@sha256:f9bf79b3412bf459cd68434f7c5f99bc9f905ecfddd5e98972368557be40f7aa
     environment:
@@ -39,6 +45,9 @@ steps:
       - trivy image --exit-code 0 --severity HIGH --ignore-unfixed $${IMAGE_REF}
 
   - name: sbom-generate
+    when:
+      - event: manual
+      - event: push
     failure: ignore
     image: dhi.io/syft:1.44.0-alpine3.23-dev@sha256:5827400e1f8401e8b925687aa38624ada774b5480153ddbe342815a68559b8ef
     environment:

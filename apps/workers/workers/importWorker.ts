@@ -3,11 +3,9 @@ import {
   and,
   count,
   eq,
-  gt,
   inArray,
   isNotNull,
   isNull,
-  lt,
   or,
   sql,
 } from "drizzle-orm";

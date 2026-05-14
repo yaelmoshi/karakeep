@@ -26,11 +26,9 @@
     "preflight": "turbo run --no-daemon typecheck lint format",
     "preflight:fix": "turbo run --no-daemon typecheck lint:fix format:fix"
   },
-  "dependencies": {
-    "husky": "^9.1.7"
-  },
   "devDependencies": {
     "@types/node": "^24.12.4",
+    "husky": "^9.1.7",
     "oxfmt": "^0.49.0",
     "oxlint": "^1.64.0",
     "sherif": "^1.11.1",

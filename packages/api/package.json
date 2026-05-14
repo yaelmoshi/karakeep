@@ -16,7 +16,7 @@
     "@hono/otel": "^1.1.1",
     "@hono/prometheus": "^1.0.2",
     "@hono/trpc-server": "^0.4.2",
-    "@hono/zod-validator": "^0.7.6",
+    "@hono/zod-validator": "^0.8.0",
     "@karakeep/db": "workspace:*",
     "@karakeep/shared": "workspace:*",
     "@karakeep/shared-server": "workspace:*",

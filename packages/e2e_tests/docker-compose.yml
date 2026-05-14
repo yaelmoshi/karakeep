@@ -22,7 +22,7 @@ services:
       OPENAI_BASE_URL: http://aimock:4010/v1
       INFERENCE_ENABLE_AUTO_SUMMARIZATION: "true"
   meilisearch:
-    image: getmeili/meilisearch:v1.41.0
+    image: getmeili/meilisearch:v1.43.1
     restart: unless-stopped
     environment:
       MEILI_NO_ANALYTICS: "true"

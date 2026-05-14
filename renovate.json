@@ -2,28 +2,23 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/build/**"
+  ],
   "labels": [
     "dependencies"
   ],
-  "prConcurrentLimit": 8,
-  "prHourlyLimit": 2,
+  "prConcurrentLimit": 4,
+  "prHourlyLimit": 1,
+  "rebaseWhen": "behind-base-branch",
   "separateMajorMinor": true,
-  "separateMultipleMajor": true,
+  "separateMultipleMajor": false,
   "packageRules": [
     {
-      "description": "Batch routine npm patch and minor updates that are not captured by a narrower ecosystem rule.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "npm patch/minor updates",
-      "groupSlug": "npm-patch-minor"
-    },
-    {
-      "description": "Keep vulnerable transitive dependency overrides reviewable but grouped.",
+      "description": "Keep vulnerable direct/transitive npm fixes together and ahead of routine dependency work.",
       "matchManagers": [
         "npm"
       ],
@@ -49,7 +44,81 @@
         "minor"
       ],
       "groupName": "npm security and transitive fixes",
-      "groupSlug": "npm-security-transitive"
+      "groupSlug": "npm-security-transitive",
+      "prPriority": 20
+    },
+    {
+      "description": "Batch the production web, worker, database, shared, and API packages that affect the deployed Karakeep app.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "apps/web/package.json",
+        "apps/workers/package.json",
+        "packages/db/package.json",
+        "packages/shared/package.json",
+        "packages/shared-server/package.json",
+        "packages/trpc/package.json"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "groupName": "karakeep app runtime patch/minor updates",
+      "groupSlug": "karakeep-app-runtime-patch-minor",
+      "prPriority": 10
+    },
+    {
+      "description": "Batch browser extension, mobile, and shared React package updates separately from the deployed server runtime.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "apps/browser-extension/package.json",
+        "apps/mobile/package.json",
+        "packages/shared-react/package.json"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "groupName": "karakeep client apps patch/minor updates",
+      "groupSlug": "karakeep-client-apps-patch-minor"
+    },
+    {
+      "description": "Batch documentation and marketing site packages together because they do not affect the deployed bookmark service.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "apps/landing/package.json",
+        "docs/package.json"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "groupName": "karakeep docs and landing patch/minor updates",
+      "groupSlug": "karakeep-docs-landing-patch-minor",
+      "prPriority": -5
+    },
+    {
+      "description": "Batch repository tooling, CLI, MCP, lint, format, build, and test dependencies.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "package.json",
+        "apps/cli/package.json",
+        "apps/mcp/package.json"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "groupName": "karakeep repo tooling patch/minor updates",
+      "groupSlug": "karakeep-repo-tooling-patch-minor",
+      "prPriority": -2
     },
     {
       "description": "Batch low-risk GitHub Actions updates.",
@@ -64,18 +133,7 @@
       "groupSlug": "github-actions-patch-minor"
     },
     {
-      "description": "Batch major GitHub Actions updates separately from routine CI updates.",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "github actions major updates",
-      "groupSlug": "github-actions-major"
-    },
-    {
-      "description": "Batch Docker image and Compose tag updates.",
+      "description": "Batch Docker image and Dockerfile tag updates.",
       "matchManagers": [
         "docker-compose",
         "dockerfile"
@@ -88,7 +146,33 @@
       "groupSlug": "docker-images-patch-minor"
     },
     {
-      "description": "Keep major Docker runtime updates separate because they can affect production images.",
+      "description": "Keep all npm major upgrades dashboard-approved; these are migration work, not routine updates.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": "npm major migrations",
+      "groupSlug": "npm-major-migrations",
+      "dependencyDashboardApproval": true,
+      "prPriority": -20
+    },
+    {
+      "description": "Keep major GitHub Actions updates dashboard-approved.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": "github actions major migrations",
+      "groupSlug": "github-actions-major-migrations",
+      "dependencyDashboardApproval": true,
+      "prPriority": -20
+    },
+    {
+      "description": "Keep major Docker runtime updates dashboard-approved because they can affect the production image.",
       "matchManagers": [
         "docker-compose",
         "dockerfile"
@@ -96,347 +180,10 @@
       "matchUpdateTypes": [
         "major"
       ],
-      "groupName": "docker image major updates",
-      "groupSlug": "docker-images-major"
-    },
-    {
-      "description": "Batch Expo and React Native mobile runtime updates.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@expo/**",
-        "@react-native**",
-        "@react-navigation/**",
-        "@rn-primitives/**",
-        "@sentry/react-native",
-        "@shopify/flash-list",
-        "expo",
-        "expo-**",
-        "nativewind",
-        "react-native",
-        "react-native-**",
-        "sonner-native"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "mobile expo/react-native patch/minor updates",
-      "groupSlug": "mobile-expo-react-native-patch-minor"
-    },
-    {
-      "description": "Keep Expo SDK and React Native major upgrades together but separate from web packages.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@expo/**",
-        "@react-native**",
-        "@react-navigation/**",
-        "@rn-primitives/**",
-        "@sentry/react-native",
-        "@shopify/flash-list",
-        "expo",
-        "expo-**",
-        "nativewind",
-        "react-native",
-        "react-native-**",
-        "sonner-native"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "mobile expo/react-native major updates",
-      "groupSlug": "mobile-expo-react-native-major"
-    },
-    {
-      "description": "Batch Radix UI primitives used by the web and extension apps.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@radix-ui/**"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "radix ui patch/minor updates",
-      "groupSlug": "radix-ui-patch-minor"
-    },
-    {
-      "description": "Batch TanStack Query packages together.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@tanstack/**"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "tanstack query patch/minor updates",
-      "groupSlug": "tanstack-query-patch-minor"
-    },
-    {
-      "description": "Batch tRPC packages together.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@trpc/**"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "trpc patch/minor updates",
-      "groupSlug": "trpc-patch-minor"
-    },
-    {
-      "description": "Batch Hono server, validation, metrics, and telemetry packages.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@hono/**",
-        "hono"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "hono patch/minor updates",
-      "groupSlug": "hono-patch-minor"
-    },
-    {
-      "description": "Batch OpenTelemetry packages because they should stay version-aligned.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@opentelemetry/**"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "opentelemetry patch/minor updates",
-      "groupSlug": "opentelemetry-patch-minor"
-    },
-    {
-      "description": "Batch OpenTelemetry major updates separately from routine telemetry bumps.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@opentelemetry/**"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "opentelemetry major updates",
-      "groupSlug": "opentelemetry-major"
-    },
-    {
-      "description": "Batch Docusaurus documentation packages.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@docusaurus/**"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "docusaurus patch/minor updates",
-      "groupSlug": "docusaurus-patch-minor"
-    },
-    {
-      "description": "Batch Astro landing page packages.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@astrojs/**",
-        "astro"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "astro landing patch/minor updates",
-      "groupSlug": "astro-landing-patch-minor"
-    },
-    {
-      "description": "Batch Lexical editor packages because they should be upgraded together.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@lexical/**",
-        "lexical"
-      ],
-      "groupName": "lexical editor updates",
-      "groupSlug": "lexical-editor"
-    },
-    {
-      "description": "Batch metascraper packages because they should be upgraded together.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "metascraper",
-        "metascraper-**"
-      ],
-      "groupName": "metascraper updates",
-      "groupSlug": "metascraper"
-    },
-    {
-      "description": "Batch Tailwind, PostCSS, and class utility updates.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@tailwindcss/**",
-        "autoprefixer",
-        "class-variance-authority",
-        "clsx",
-        "postcss",
-        "tailwind-merge",
-        "tailwindcss",
-        "tailwindcss-animate"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "tailwind and styling patch/minor updates",
-      "groupSlug": "tailwind-styling-patch-minor"
-    },
-    {
-      "description": "Keep Tailwind major upgrades separate because Tailwind v4 is a migration.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@tailwindcss/**",
-        "tailwindcss",
-        "tailwind-merge"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "tailwind major updates",
-      "groupSlug": "tailwind-major"
-    },
-    {
-      "description": "Batch Vite ecosystem patch/minor updates.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@crxjs/vite-plugin",
-        "@vitejs/**",
-        "vite",
-        "vite-plugin-**",
-        "vitest"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "vite ecosystem patch/minor updates",
-      "groupSlug": "vite-ecosystem-patch-minor"
-    },
-    {
-      "description": "Keep Vite ecosystem major upgrades separate from routine tooling bumps.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@crxjs/vite-plugin",
-        "@vitejs/**",
-        "vite",
-        "vite-plugin-**",
-        "vitest"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "vite ecosystem major updates",
-      "groupSlug": "vite-ecosystem-major"
-    },
-    {
-      "description": "Batch React 19 patch/minor packages and type updates.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@types/react",
-        "@types/react-dom",
-        "react",
-        "react-dom"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "react patch/minor updates",
-      "groupSlug": "react-patch-minor"
-    },
-    {
-      "description": "Keep Next.js major upgrades isolated.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "next"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "next major updates",
-      "groupSlug": "next-major"
-    },
-    {
-      "description": "Keep TypeScript major upgrades isolated.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "typescript"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "typescript major updates",
-      "groupSlug": "typescript-major"
-    },
-    {
-      "description": "Batch routine TypeScript tooling updates.",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@tsconfig/**",
-        "@types/**",
-        "oxfmt",
-        "oxlint",
-        "sherif",
-        "tsx",
-        "turbo",
-        "typescript"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "groupName": "typescript and repo tooling patch/minor updates",
-      "groupSlug": "typescript-tooling-patch-minor"
+      "groupName": "docker image major migrations",
+      "groupSlug": "docker-images-major-migrations",
+      "dependencyDashboardApproval": true,
+      "prPriority": -20
     }
   ]
 }

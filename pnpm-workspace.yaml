@@ -4,3 +4,16 @@ packages:
   - "tooling/*"
   - "tools/*"
   - "docs"
+allowBuilds:
+  '@parcel/watcher': true
+  '@sentry/cli': true
+  '@swc/core': true
+  better-sqlite3: true
+  core-js: true
+  core-js-pure: true
+  esbuild: true
+  postman-code-generators: false
+  protobufjs: true
+  re2: true
+  sharp: true
+  tesseract.js: true

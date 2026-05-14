@@ -231,6 +231,8 @@ const allEnv = z.object({
     .optional(),
 
   // Database configuration
+  DB_DRIVER: z.enum(["sqlite", "postgres"]).default("sqlite"),
+  DATABASE_URL: z.string().url().optional(),
   DB_WAL_MODE: stringBool("false"),
 
   // OpenTelemetry tracing configuration
@@ -459,6 +461,8 @@ const serverConfigSchema = allEnv.transform((val, ctx) => {
       },
     },
     database: {
+      driver: val.DB_DRIVER,
+      url: val.DATABASE_URL,
       walMode: val.DB_WAL_MODE,
     },
     tracing: {
@@ -497,6 +501,14 @@ const serverConfigSchema = allEnv.transform((val, ctx) => {
       code: z.ZodIssueCode.custom,
       message:
         "OTEL_EXPORTER_OTLP_LOGS_ENDPOINT is required when OTEL_EVENT_LOGS_EXPORT_ENABLED is true",
+      fatal: true,
+    });
+    return z.NEVER;
+  }
+  if (obj.database.driver === "postgres" && !obj.database.url) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "DATABASE_URL is required when DB_DRIVER is postgres",
       fatal: true,
     });
     return z.NEVER;

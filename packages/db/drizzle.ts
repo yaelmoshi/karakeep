@@ -11,24 +11,42 @@ import dbConfig from "./drizzle.config";
 import { instrumentDatabase } from "./instrumentation";
 import * as schema from "./schema";
 
-const sqlite = new Database(dbConfig.dbCredentials.url);
+function createSqliteDatabase() {
+  const sqlite = new Database(dbConfig.dbCredentials.url);
 
-if (serverConfig.database.walMode) {
-  sqlite.pragma("journal_mode = WAL");
-  sqlite.pragma("synchronous = NORMAL");
-} else {
-  sqlite.pragma("journal_mode = DELETE");
+  if (serverConfig.database.walMode) {
+    sqlite.pragma("journal_mode = WAL");
+    sqlite.pragma("synchronous = NORMAL");
+  } else {
+    sqlite.pragma("journal_mode = DELETE");
+  }
+  sqlite.pragma("cache_size = -65536");
+  sqlite.pragma("foreign_keys = ON");
+  sqlite.pragma("temp_store = MEMORY");
+
+  instrumentDatabase(sqlite);
+
+  return drizzle(sqlite, { schema });
 }
-sqlite.pragma("cache_size = -65536");
-sqlite.pragma("foreign_keys = ON");
-sqlite.pragma("temp_store = MEMORY");
 
-instrumentDatabase(sqlite);
+function createDatabase() {
+  if (serverConfig.database.driver === "postgres") {
+    throw new Error(
+      "DB_DRIVER=postgres is configured, but the Postgres schema and migrations are not implemented yet.",
+    );
+  }
 
-export const db = drizzle(sqlite, { schema });
+  return createSqliteDatabase();
+}
+
+export const db = createDatabase();
 export type DB = typeof db;
 
 export function getInMemoryDB(runMigrations: boolean) {
+  if (serverConfig.database.driver === "postgres") {
+    throw new Error("getInMemoryDB is only available for the SQLite driver.");
+  }
+
   const mem = new Database(":memory:");
   const db = drizzle(mem, { schema, logger: false });
   if (runMigrations) {

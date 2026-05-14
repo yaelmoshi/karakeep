@@ -10,15 +10,21 @@ migrations from `packages/db/drizzle`.
 - `packages/db/schema.sqlite.ts` contains the current SQLite Drizzle schema.
 - `packages/db/schema.ts` remains the public schema import path for existing
   application code.
+- `packages/shared/config.ts` exposes `DB_DRIVER=sqlite|postgres` and
+  `DATABASE_URL`; SQLite remains the default.
+- `packages/db/drizzle.config.ts` selects SQLite generation output by default
+  and Postgres generation output when `DB_DRIVER=postgres`.
 - `packages/db/drizzle.ts` owns the live database connection and currently
-  creates a synchronous `better-sqlite3` database.
+  creates a synchronous `better-sqlite3` database. Postgres runtime mode fails
+  intentionally until the Postgres schema and migrations exist.
 - `packages/db/migrate.ts` runs SQLite migrations through the
-  `better-sqlite3` migrator.
+  `better-sqlite3` migrator. Postgres migration mode fails intentionally until
+  Postgres migrations exist.
 
 ## Porting Plan
 
 1. Keep SQLite as the default backend for upstream compatibility.
-2. Add explicit database selection through environment config, for example
+2. Add explicit database selection through environment config:
    `DB_DRIVER=sqlite|postgres` and `DATABASE_URL`.
 3. Add a Postgres Drizzle schema using `drizzle-orm/pg-core`, preserving table
    and column names where possible.

@@ -4,7 +4,10 @@ import { and, count, eq, inArray, or, sql } from "drizzle-orm";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
-import { KarakeepDBTransaction, SqliteError } from "@karakeep/db";
+import {
+  isPrimaryKeyConstraintError,
+  KarakeepDBTransaction,
+} from "@karakeep/db";
 import {
   bookmarkLists,
   bookmarks,
@@ -1045,11 +1048,9 @@ export class ManualList extends List {
         );
       }
     } catch (e) {
-      if (e instanceof SqliteError) {
-        if (e.code == "SQLITE_CONSTRAINT_PRIMARYKEY") {
-          // this is fine, it just means the bookmark is already in the list
-          return;
-        }
+      if (isPrimaryKeyConstraintError(e)) {
+        // this is fine, it just means the bookmark is already in the list
+        return;
       }
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

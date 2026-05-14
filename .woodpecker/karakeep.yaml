@@ -28,8 +28,8 @@ steps:
             from_secret: github_token
       provenance: mode=max
       buildkit_driveropt: network=host
-      cache_from: 'type=registry\,ref=harbor.m0sh1.cc/cache/karakeep:buildcache'
-      cache_to: 'type=registry,ref=harbor.m0sh1.cc/cache/karakeep:buildcache,mode=max,ignore-error=true'
+      cache_from: 'type=registry\,ref=ghcr.io/sm-moshi/karakeep:buildcache'
+      cache_to: 'type=registry,ref=ghcr.io/sm-moshi/karakeep:buildcache,mode=max,ignore-error=true'
 
   - name: trivy-scan
     when:

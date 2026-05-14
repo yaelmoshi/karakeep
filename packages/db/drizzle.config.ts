@@ -14,9 +14,18 @@ const config = (() => {
       dialect: "postgresql",
       schema: "./schema.pg.ts",
       out: "./drizzle-pg",
-      dbCredentials: {
-        url: serverConfig.database.url!,
-      },
+      dbCredentials: serverConfig.database.url
+        ? {
+            url: serverConfig.database.url,
+          }
+        : {
+            host: serverConfig.database.postgres.host!,
+            port: serverConfig.database.postgres.port,
+            database: serverConfig.database.postgres.database!,
+            user: serverConfig.database.postgres.user!,
+            password: serverConfig.database.postgres.password!,
+            ssl: serverConfig.database.postgres.ssl,
+          },
     } satisfies Config;
   }
 

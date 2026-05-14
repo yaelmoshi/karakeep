@@ -233,6 +233,12 @@ const allEnv = z.object({
   // Database configuration
   DB_DRIVER: z.enum(["sqlite", "postgres"]).default("sqlite"),
   DATABASE_URL: z.string().url().optional(),
+  POSTGRES_HOST: z.string().optional(),
+  POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
+  POSTGRES_DATABASE: z.string().optional(),
+  POSTGRES_USER: z.string().optional(),
+  POSTGRES_PASSWORD: z.string().optional(),
+  POSTGRES_SSL: stringBool("false"),
   DB_WAL_MODE: stringBool("false"),
 
   // OpenTelemetry tracing configuration
@@ -463,6 +469,14 @@ const serverConfigSchema = allEnv.transform((val, ctx) => {
     database: {
       driver: val.DB_DRIVER,
       url: val.DATABASE_URL,
+      postgres: {
+        host: val.POSTGRES_HOST,
+        port: val.POSTGRES_PORT,
+        database: val.POSTGRES_DATABASE,
+        user: val.POSTGRES_USER,
+        password: val.POSTGRES_PASSWORD,
+        ssl: val.POSTGRES_SSL,
+      },
       walMode: val.DB_WAL_MODE,
     },
     tracing: {
@@ -505,10 +519,20 @@ const serverConfigSchema = allEnv.transform((val, ctx) => {
     });
     return z.NEVER;
   }
-  if (obj.database.driver === "postgres" && !obj.database.url) {
+  if (
+    obj.database.driver === "postgres" &&
+    !obj.database.url &&
+    !(
+      obj.database.postgres.host &&
+      obj.database.postgres.database &&
+      obj.database.postgres.user &&
+      obj.database.postgres.password
+    )
+  ) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "DATABASE_URL is required when DB_DRIVER is postgres",
+      message:
+        "DATABASE_URL or POSTGRES_HOST, POSTGRES_DATABASE, POSTGRES_USER, and POSTGRES_PASSWORD are required when DB_DRIVER is postgres",
       fatal: true,
     });
     return z.NEVER;

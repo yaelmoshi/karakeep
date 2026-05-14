@@ -1,0 +1,46 @@
+# Karakeep fork image.
+# Pushes the all-in-one runtime to: ghcr.io/sm-moshi/karakeep
+when:
+  - event: manual
+  - event: push
+    branch: main
+
+steps:
+  - name: build-and-push-ghcr
+    image: woodpeckerci/plugin-docker-buildx:6.1.0@sha256:33263f74a593ddef5d4faeb39ae9f87db14d64d8aae8186284ae6e90d89298a4
+    privileged: true
+    settings:
+      registry: ghcr.io
+      repo: ghcr.io/sm-moshi/karakeep
+      dockerfile: docker/Dockerfile
+      context: .
+      target: aio
+      tags:
+        - "${CI_COMMIT_SHA:0:8}"
+        - latest
+      logins:
+        - registry: ghcr.io
+          username: sm-moshi
+          password:
+            from_secret: github_token
+      provenance: mode=max
+      buildkit_driveropt: network=host
+      cache_from: 'type=registry\,ref=harbor.m0sh1.cc/cache/karakeep:buildcache'
+      cache_to: 'type=registry,ref=harbor.m0sh1.cc/cache/karakeep:buildcache,mode=max,ignore-error=true'
+
+  - name: trivy-scan
+    failure: ignore
+    image: dhi.io/trivy:0.70.0-alpine3.23-dev@sha256:f9bf79b3412bf459cd68434f7c5f99bc9f905ecfddd5e98972368557be40f7aa
+    environment:
+      IMAGE_REF: ghcr.io/sm-moshi/karakeep:${CI_COMMIT_SHA:0:8}
+    commands:
+      - trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed $${IMAGE_REF}
+      - trivy image --exit-code 0 --severity HIGH --ignore-unfixed $${IMAGE_REF}
+
+  - name: sbom-generate
+    failure: ignore
+    image: dhi.io/syft:1.44.0-alpine3.23-dev@sha256:5827400e1f8401e8b925687aa38624ada774b5480153ddbe342815a68559b8ef
+    environment:
+      IMAGE_REF: ghcr.io/sm-moshi/karakeep:${CI_COMMIT_SHA:0:8}
+    commands:
+      - syft registry:$${IMAGE_REF} -o spdx-json > sbom.spdx.json

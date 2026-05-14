@@ -13,7 +13,12 @@ describe("formatLocalDate", () => {
   const date = new Date("2025-01-05T15:42:00Z");
 
   it("formats supported locales with localized date and time", () => {
-    expect(formatLocalDate(date, "PP, p", "en")).toBe("Jan 5, 2025, 3:42 PM");
+    expect(formatLocalDate(date, "PP, p", "en")).toBe(
+      new Intl.DateTimeFormat("en", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(date),
+    );
     expect(formatLocalDate(date, "PPP", "fr")).toBe("5 janvier 2025");
   });
 

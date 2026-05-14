@@ -109,6 +109,10 @@ function normalizeLazyLoadImages(document: Document): void {
   }
 }
 
+function createPurifier(window: unknown): ReturnType<typeof DOMPurify> {
+  return DOMPurify(window as Parameters<typeof DOMPurify>[0]);
+}
+
 function extractReadableContent(
   htmlContent: string,
   url: string,
@@ -124,7 +128,7 @@ function extractReadableContent(
 
     const purifyWindow = new JSDOM("").window;
     try {
-      const purify = DOMPurify(purifyWindow);
+      const purify = createPurifier(purifyWindow);
       const purifiedHTML = purify.sanitize(readableContent.content);
       return { content: purifiedHTML };
     } finally {
@@ -166,7 +170,7 @@ async function main() {
     // path already does this, but the direct-content path was missing it).
     const purifyWindow = new JSDOM("").window;
     try {
-      const purify = DOMPurify(purifyWindow);
+      const purify = createPurifier(purifyWindow);
       const purifiedHTML = purify.sanitize(meta.readableContentHtml);
       readableContent = { content: purifiedHTML };
     } finally {

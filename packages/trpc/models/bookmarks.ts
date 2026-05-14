@@ -16,7 +16,7 @@ import {
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
-import { db as DONT_USE_db } from "@karakeep/db";
+import { db as DONT_USE_db, getMutationCount } from "@karakeep/db";
 import {
   assets,
   AssetTypes,
@@ -929,7 +929,8 @@ export class Bookmark extends BareBookmark {
           eq(bookmarks.userId, this.ctx.user.id),
           eq(bookmarks.id, this.bookmark.id),
         ),
-      );
+      )
+      .returning({ id: bookmarks.id });
 
     await SearchIndexingQueue.enqueue(
       {
@@ -950,7 +951,7 @@ export class Bookmark extends BareBookmark {
         groupId: this.ctx.user.id,
       },
     );
-    if (deleted.changes > 0) {
+    if (getMutationCount(deleted) > 0) {
       await this.cleanupAssets();
     }
   }

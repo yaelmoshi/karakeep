@@ -2,6 +2,7 @@ import { experimental_trpcMiddleware, TRPCError } from "@trpc/server";
 import { and, eq, gt, inArray, like, lt, or } from "drizzle-orm";
 import { z } from "zod";
 
+import { getMutationCount } from "@karakeep/db";
 import type { ZBookmarkContent } from "@karakeep/shared/types/bookmarks";
 import type { ZBookmarkTags } from "@karakeep/shared/types/tags";
 import {
@@ -491,8 +492,9 @@ export const bookmarksAppRouter = router({
           const result = await tx
             .update(bookmarkLinks)
             .set(linkUpdateData)
-            .where(eq(bookmarkLinks.id, input.bookmarkId));
-          if (result.changes == 0) {
+            .where(eq(bookmarkLinks.id, input.bookmarkId))
+            .returning({ id: bookmarkLinks.id });
+          if (getMutationCount(result) == 0) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message:
@@ -508,9 +510,10 @@ export const bookmarksAppRouter = router({
             .set({
               text: input.text,
             })
-            .where(eq(bookmarkTexts.id, input.bookmarkId));
+            .where(eq(bookmarkTexts.id, input.bookmarkId))
+            .returning({ id: bookmarkTexts.id });
 
-          if (result.changes == 0) {
+          if (getMutationCount(result) == 0) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message:
@@ -526,9 +529,10 @@ export const bookmarksAppRouter = router({
             .set({
               content: input.assetContent,
             })
-            .where(and(eq(bookmarkAssets.id, input.bookmarkId)));
+            .where(and(eq(bookmarkAssets.id, input.bookmarkId)))
+            .returning({ id: bookmarkAssets.id });
 
-          if (result.changes == 0) {
+          if (getMutationCount(result) == 0) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message:
@@ -578,7 +582,8 @@ export const bookmarksAppRouter = router({
                 eq(bookmarks.userId, ctx.user.id),
                 eq(bookmarks.id, input.bookmarkId),
               ),
-            );
+            )
+            .returning({ tagId: tagsOnBookmarks.tagId });
         }
       });
 
@@ -1046,7 +1051,8 @@ export const bookmarksAppRouter = router({
             .values(
               toAddTagNames.map((name) => ({ name, userId: ctx.user.id })),
             )
-            .onConflictDoNothing();
+            .onConflictDoNothing()
+            .returning({ tagId: tagsOnBookmarks.tagId });
         }
       }
 
@@ -1088,7 +1094,7 @@ export const bookmarksAppRouter = router({
                 inArray(tagsOnBookmarks.tagId, idsToRemove),
               ),
             );
-          numChanges += res.changes;
+          numChanges += getMutationCount(res);
         }
 
         // Attach tags
@@ -1103,7 +1109,7 @@ export const bookmarksAppRouter = router({
               })),
             )
             .onConflictDoNothing();
-          numChanges += res.changes;
+          numChanges += getMutationCount(res);
         }
 
         // Update bookmark modified timestamp

@@ -4,7 +4,7 @@ import { and, count, desc, eq, gte, lte, sql } from "drizzle-orm";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
-import { isUniqueConstraintError } from "@karakeep/db";
+import { getMutationCount, isUniqueConstraintError } from "@karakeep/db";
 import {
   assets,
   AssetTypes,
@@ -34,6 +34,44 @@ import {
 import { AuthedContext, Context } from "..";
 import { generatePasswordSalt, hashPassword, validatePassword } from "../auth";
 import { sendPasswordResetEmail, sendVerificationEmail } from "../email";
+
+function bookmarkDomainSql() {
+  if (serverConfig.database.driver === "postgres") {
+    return sql<string>`split_part(
+      CASE
+        WHEN ${bookmarkLinks.url} LIKE 'https://%' THEN substr(${bookmarkLinks.url}, 9)
+        WHEN ${bookmarkLinks.url} LIKE 'http://%' THEN substr(${bookmarkLinks.url}, 8)
+        ELSE ${bookmarkLinks.url}
+      END,
+      '/',
+      1
+    )`;
+  }
+
+  return sql<string>`CASE
+    WHEN ${bookmarkLinks.url} LIKE 'https://%' THEN
+      CASE
+        WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') > 0 THEN
+          SUBSTR(${bookmarkLinks.url}, 9, INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') - 1)
+        ELSE
+          SUBSTR(${bookmarkLinks.url}, 9)
+      END
+    WHEN ${bookmarkLinks.url} LIKE 'http://%' THEN
+      CASE
+        WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') > 0 THEN
+          SUBSTR(${bookmarkLinks.url}, 8, INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') - 1)
+        ELSE
+          SUBSTR(${bookmarkLinks.url}, 8)
+      END
+    ELSE
+      CASE
+        WHEN INSTR(${bookmarkLinks.url}, '/') > 0 THEN
+          SUBSTR(${bookmarkLinks.url}, 1, INSTR(${bookmarkLinks.url}, '/') - 1)
+        ELSE
+          ${bookmarkLinks.url}
+      END
+  END`;
+}
 
 export class User {
   constructor(
@@ -218,9 +256,10 @@ export class User {
     const result = await ctx.db
       .update(users)
       .set({ emailVerified: new Date() })
-      .where(eq(users.email, email));
+      .where(eq(users.email, email))
+      .returning({ id: users.id });
 
-    if (result.changes === 0) {
+    if (getMutationCount(result) === 0) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "User not found",
@@ -394,9 +433,12 @@ export class User {
   private static async deleteInternal(db: Context["db"], userId: string) {
     await User.assertNoActiveStripeSubscriptionForUser(db, userId);
 
-    const res = await db.delete(users).where(eq(users.id, userId));
+    const res = await db
+      .delete(users)
+      .where(eq(users.id, userId))
+      .returning({ id: users.id });
 
-    if (res.changes === 0) {
+    if (getMutationCount(res) === 0) {
       throw new TRPCError({ code: "NOT_FOUND" });
     }
 
@@ -714,59 +756,13 @@ export class User {
       // Top domains
       this.ctx.db
         .select({
-          domain: sql<string>`CASE
-            WHEN ${bookmarkLinks.url} LIKE 'https://%' THEN
-              CASE
-                WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') > 0 THEN
-                  SUBSTR(${bookmarkLinks.url}, 9, INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') - 1)
-                ELSE
-                  SUBSTR(${bookmarkLinks.url}, 9)
-              END
-            WHEN ${bookmarkLinks.url} LIKE 'http://%' THEN
-              CASE
-                WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') > 0 THEN
-                  SUBSTR(${bookmarkLinks.url}, 8, INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') - 1)
-                ELSE
-                  SUBSTR(${bookmarkLinks.url}, 8)
-              END
-            ELSE
-              CASE
-                WHEN INSTR(${bookmarkLinks.url}, '/') > 0 THEN
-                  SUBSTR(${bookmarkLinks.url}, 1, INSTR(${bookmarkLinks.url}, '/') - 1)
-                ELSE
-                  ${bookmarkLinks.url}
-              END
-          END`,
+          domain: bookmarkDomainSql(),
           count: count(),
         })
         .from(bookmarkLinks)
         .innerJoin(bookmarks, eq(bookmarks.id, bookmarkLinks.id))
         .where(eq(bookmarks.userId, this.user.id))
-        .groupBy(
-          sql`CASE
-          WHEN ${bookmarkLinks.url} LIKE 'https://%' THEN
-            CASE
-              WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') > 0 THEN
-                SUBSTR(${bookmarkLinks.url}, 9, INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') - 1)
-              ELSE
-                SUBSTR(${bookmarkLinks.url}, 9)
-            END
-          WHEN ${bookmarkLinks.url} LIKE 'http://%' THEN
-            CASE
-              WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') > 0 THEN
-                SUBSTR(${bookmarkLinks.url}, 8, INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') - 1)
-              ELSE
-                SUBSTR(${bookmarkLinks.url}, 8)
-            END
-          ELSE
-            CASE
-              WHEN INSTR(${bookmarkLinks.url}, '/') > 0 THEN
-                SUBSTR(${bookmarkLinks.url}, 1, INSTR(${bookmarkLinks.url}, '/') - 1)
-              ELSE
-                ${bookmarkLinks.url}
-            END
-        END`,
-        )
+        .groupBy(bookmarkDomainSql())
         .orderBy(desc(count()))
         .limit(10),
 
@@ -1047,59 +1043,13 @@ export class User {
       // Top 5 domains
       this.ctx.db
         .select({
-          domain: sql<string>`CASE
-            WHEN ${bookmarkLinks.url} LIKE 'https://%' THEN
-              CASE
-                WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') > 0 THEN
-                  SUBSTR(${bookmarkLinks.url}, 9, INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') - 1)
-                ELSE
-                  SUBSTR(${bookmarkLinks.url}, 9)
-              END
-            WHEN ${bookmarkLinks.url} LIKE 'http://%' THEN
-              CASE
-                WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') > 0 THEN
-                  SUBSTR(${bookmarkLinks.url}, 8, INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') - 1)
-                ELSE
-                  SUBSTR(${bookmarkLinks.url}, 8)
-              END
-            ELSE
-              CASE
-                WHEN INSTR(${bookmarkLinks.url}, '/') > 0 THEN
-                  SUBSTR(${bookmarkLinks.url}, 1, INSTR(${bookmarkLinks.url}, '/') - 1)
-                ELSE
-                  ${bookmarkLinks.url}
-              END
-          END`,
+          domain: bookmarkDomainSql(),
           count: count(),
         })
         .from(bookmarkLinks)
         .innerJoin(bookmarks, eq(bookmarks.id, bookmarkLinks.id))
         .where(yearFilter)
-        .groupBy(
-          sql`CASE
-          WHEN ${bookmarkLinks.url} LIKE 'https://%' THEN
-            CASE
-              WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') > 0 THEN
-                SUBSTR(${bookmarkLinks.url}, 9, INSTR(SUBSTR(${bookmarkLinks.url}, 9), '/') - 1)
-              ELSE
-                SUBSTR(${bookmarkLinks.url}, 9)
-            END
-          WHEN ${bookmarkLinks.url} LIKE 'http://%' THEN
-            CASE
-              WHEN INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') > 0 THEN
-                SUBSTR(${bookmarkLinks.url}, 8, INSTR(SUBSTR(${bookmarkLinks.url}, 8), '/') - 1)
-              ELSE
-                SUBSTR(${bookmarkLinks.url}, 8)
-            END
-          ELSE
-            CASE
-              WHEN INSTR(${bookmarkLinks.url}, '/') > 0 THEN
-                SUBSTR(${bookmarkLinks.url}, 1, INSTR(${bookmarkLinks.url}, '/') - 1)
-              ELSE
-                ${bookmarkLinks.url}
-            END
-        END`,
-        )
+        .groupBy(bookmarkDomainSql())
         .orderBy(desc(count()))
         .limit(5),
 

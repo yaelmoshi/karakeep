@@ -2,6 +2,7 @@ import { experimental_trpcMiddleware, TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { getMutationCount } from "@karakeep/db";
 import { customPrompts } from "@karakeep/db/schema";
 import {
   zNewPromptSchema,
@@ -108,8 +109,9 @@ export const promptsAppRouter = router({
             eq(customPrompts.userId, ctx.user.id),
             eq(customPrompts.id, input.promptId),
           ),
-        );
-      if (res.changes == 0) {
+        )
+        .returning({ id: customPrompts.id });
+      if (getMutationCount(res) == 0) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
     }),

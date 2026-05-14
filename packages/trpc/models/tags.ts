@@ -14,7 +14,7 @@ import {
 import { z } from "zod";
 
 import type { ZAttachedByEnum } from "@karakeep/shared/types/tags";
-import { isUniqueConstraintError } from "@karakeep/db";
+import { getMutationCount, isUniqueConstraintError } from "@karakeep/db";
 import { bookmarkTags, tagsOnBookmarks } from "@karakeep/db/schema";
 import { triggerSearchReindex } from "@karakeep/shared-server";
 import {
@@ -194,8 +194,9 @@ export class Tag {
               .where(eq(tagsOnBookmarks.tagId, bookmarkTags.id)),
           ),
         ),
-      );
-    return res.changes;
+      )
+      .returning({ id: bookmarkTags.id });
+    return getMutationCount(res);
   }
 
   static async merge(
@@ -315,9 +316,10 @@ export class Tag {
           eq(bookmarkTags.id, this.tag.id),
           eq(bookmarkTags.userId, this.ctx.user.id),
         ),
-      );
+      )
+      .returning({ id: bookmarkTags.id });
 
-    if (res.changes === 0) {
+    if (getMutationCount(res) === 0) {
       throw new TRPCError({ code: "NOT_FOUND" });
     }
 

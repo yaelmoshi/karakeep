@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
+import { getMutationCount } from "@karakeep/db";
 import { assets } from "@karakeep/db/schema";
 import { deleteAsset } from "@karakeep/shared/assetdb";
 import serverConfig from "@karakeep/shared/config";
@@ -192,8 +193,9 @@ export class Asset {
           eq(assets.id, input.assetId),
           eq(assets.bookmarkId, input.bookmarkId),
         ),
-      );
-    if (result.changes == 0) {
+      )
+      .returning({ id: assets.id });
+    if (getMutationCount(result) == 0) {
       throw new TRPCError({ code: "NOT_FOUND" });
     }
     await deleteAsset({ userId: ctx.user.id, assetId: input.assetId }).catch(

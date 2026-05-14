@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { db as DONT_USE_DB } from "@karakeep/db";
+import { db as DONT_USE_DB, getMutationCount } from "@karakeep/db";
 import {
   ruleEngineActionsTable,
   ruleEngineRulesTable,
@@ -154,9 +154,10 @@ export class RuleEngineRuleModel {
             eq(ruleEngineRulesTable.id, input.id),
             eq(ruleEngineRulesTable.userId, this.ctx.user.id),
           ),
-        );
+        )
+        .returning({ id: ruleEngineRulesTable.id });
 
-      if (result.changes === 0) {
+      if (getMutationCount(result) === 0) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Rule not found" });
       }
 
@@ -195,9 +196,10 @@ export class RuleEngineRuleModel {
           eq(ruleEngineRulesTable.id, this.rule.id),
           eq(ruleEngineRulesTable.userId, this.ctx.user.id),
         ),
-      );
+      )
+      .returning({ id: ruleEngineRulesTable.id });
 
-    if (result.changes === 0) {
+    if (getMutationCount(result) === 0) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Rule not found" });
     }
   }

@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { count, eq, or, sum } from "drizzle-orm";
 import { z } from "zod";
 
+import { getMutationCount } from "@karakeep/db";
 import { assets, bookmarkLinks, bookmarks, users } from "@karakeep/db/schema";
 import {
   AdminMaintenanceQueue,
@@ -416,9 +417,10 @@ export const adminAppRouter = router({
       const result = await ctx.db
         .update(users)
         .set(updateData)
-        .where(eq(users.id, input.userId));
+        .where(eq(users.id, input.userId))
+        .returning({ id: users.id });
 
-      if (!result.changes) {
+      if (!getMutationCount(result)) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found",
@@ -439,9 +441,10 @@ export const adminAppRouter = router({
       const result = await ctx.db
         .update(users)
         .set({ password: hashedPassword, salt: newSalt })
-        .where(eq(users.id, input.userId));
+        .where(eq(users.id, input.userId))
+        .returning({ id: users.id });
 
-      if (result.changes == 0) {
+      if (getMutationCount(result) == 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found",

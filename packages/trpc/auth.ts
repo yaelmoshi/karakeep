@@ -2,6 +2,7 @@ import { createHash, randomBytes } from "crypto";
 import * as bcrypt from "bcryptjs";
 import { and, eq } from "drizzle-orm";
 
+import { getMutationCount } from "@karakeep/db";
 import { apiKeys } from "@karakeep/db/schema";
 import type { ZApiKeyScope } from "@karakeep/shared/types/apiKeys";
 import { API_KEY_FULL_ACCESS_SCOPE } from "@karakeep/shared/types/apiKeys";
@@ -41,9 +42,10 @@ export async function regenerateApiKey(
       keyId: keyId,
       keyHash: secretHash,
     })
-    .where(and(eq(apiKeys.id, id), eq(apiKeys.userId, userId)));
+    .where(and(eq(apiKeys.id, id), eq(apiKeys.userId, userId)))
+    .returning({ id: apiKeys.id });
 
-  if (res.changes == 0) {
+  if (getMutationCount(res) == 0) {
     throw new Error("Failed to regenerate API key");
   }
   return plain;

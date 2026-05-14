@@ -2,7 +2,7 @@ import { and, asc, eq, gt, isNotNull, isNull, sql } from "drizzle-orm";
 
 import type { ZAdminMaintenanceMigrateLargeLinkHtmlTask } from "@karakeep/shared-server";
 import type { DequeuedJob } from "@karakeep/shared/queueing";
-import { db } from "@karakeep/db";
+import { db, getMutationCount } from "@karakeep/db";
 import { AssetTypes, bookmarkLinks, bookmarks } from "@karakeep/db/schema";
 import { QuotaService } from "@karakeep/shared-server";
 import {
@@ -25,7 +25,16 @@ interface BookmarkHtmlRow {
   htmlContent: string;
 }
 
+function htmlContentSizeSql() {
+  if (serverConfig.database.driver === "postgres") {
+    return sql`octet_length(${bookmarkLinks.htmlContent})`;
+  }
+
+  return sql`length(CAST(${bookmarkLinks.htmlContent} AS BLOB))`;
+}
+
 async function getBookmarksWithLargeInlineHtml(limit: number, cursor?: string) {
+  const contentSize = htmlContentSizeSql();
   const rows = await db
     .select({
       bookmarkId: bookmarkLinks.id,
@@ -40,12 +49,12 @@ async function getBookmarksWithLargeInlineHtml(limit: number, cursor?: string) {
             gt(bookmarkLinks.id, cursor),
             isNotNull(bookmarkLinks.htmlContent),
             isNull(bookmarkLinks.contentAssetId),
-            sql`length(CAST(${bookmarkLinks.htmlContent} AS BLOB)) > ${serverConfig.crawler.htmlContentSizeThreshold}`,
+            sql`${contentSize} > ${serverConfig.crawler.htmlContentSizeThreshold}`,
           )
         : and(
             isNotNull(bookmarkLinks.htmlContent),
             isNull(bookmarkLinks.contentAssetId),
-            sql`length(CAST(${bookmarkLinks.htmlContent} AS BLOB)) > ${serverConfig.crawler.htmlContentSizeThreshold}`,
+            sql`${contentSize} > ${serverConfig.crawler.htmlContentSizeThreshold}`,
           ),
     )
     .orderBy(asc(bookmarkLinks.id))
@@ -112,9 +121,10 @@ async function migrateBookmarkHtml(
             eq(bookmarkLinks.id, bookmarkId),
             isNull(bookmarkLinks.contentAssetId),
           ),
-        );
+        )
+        .returning({ id: bookmarkLinks.id });
 
-      if (res.changes === 0) {
+      if (getMutationCount(res) === 0) {
         throw new Error("Failed to update bookmark");
       }
 

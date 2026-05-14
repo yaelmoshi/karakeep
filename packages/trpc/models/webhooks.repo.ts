@@ -2,6 +2,7 @@ import { count, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import type { DB } from "@karakeep/db";
+import { getMutationCount } from "@karakeep/db";
 import { webhooksTable } from "@karakeep/db/schema";
 import {
   zNewWebhookSchema,
@@ -54,8 +55,9 @@ export class WebhooksRepo {
   async delete(id: string): Promise<boolean> {
     const res = await this.db
       .delete(webhooksTable)
-      .where(eq(webhooksTable.id, id));
-    return res.changes > 0;
+      .where(eq(webhooksTable.id, id))
+      .returning({ id: webhooksTable.id });
+    return getMutationCount(res) > 0;
   }
 
   async update(

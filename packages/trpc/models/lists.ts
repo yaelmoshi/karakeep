@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
 import { z } from "zod";
 
 import {
+  getMutationCount,
   isPrimaryKeyConstraintError,
   KarakeepDBTransaction,
 } from "@karakeep/db";
@@ -17,6 +18,7 @@ import {
   users,
 } from "@karakeep/db/schema";
 import { parseSearchQuery } from "@karakeep/shared/searchQueryParser";
+import serverConfig from "@karakeep/shared/config";
 import { ZSortOrder } from "@karakeep/shared/types/bookmarks";
 import {
   ZBookmarkList,
@@ -36,6 +38,40 @@ import { zRuleEngineRuleEventSchema } from "@karakeep/shared/types/rules";
 
 interface ListCollaboratorEntry {
   membershipId: string;
+}
+
+function ruleEventReferencesList(listId: string) {
+  if (serverConfig.database.driver === "postgres") {
+    return and(
+      sql`CASE
+        WHEN ${ruleEngineRulesTable.event} IS JSON
+          THEN ${ruleEngineRulesTable.event}::jsonb ->> 'type'
+        ELSE NULL
+      END IN ('addedToList', 'removedFromList')`,
+      sql`EXISTS (
+        SELECT 1
+        FROM jsonb_array_elements_text(
+          CASE
+            WHEN ${ruleEngineRulesTable.event} IS JSON
+              AND jsonb_typeof(${ruleEngineRulesTable.event}::jsonb -> 'listIds') = 'array'
+              THEN ${ruleEngineRulesTable.event}::jsonb -> 'listIds'
+            ELSE '[]'::jsonb
+          END
+        ) AS list_ids(value)
+        WHERE list_ids.value = ${listId}
+      )`,
+    );
+  }
+
+  return and(
+    sql`json_valid(${ruleEngineRulesTable.event})`,
+    sql`json_extract(${ruleEngineRulesTable.event}, '$.type') IN ('addedToList', 'removedFromList')`,
+    sql`EXISTS (
+      SELECT 1
+      FROM json_each(json_extract(${ruleEngineRulesTable.event}, '$.listIds'))
+      WHERE value = ${listId}
+    )`,
+  );
 }
 
 export abstract class List {
@@ -477,13 +513,7 @@ export abstract class List {
       .where(
         and(
           eq(ruleEngineRulesTable.userId, this.ctx.user.id),
-          sql`json_valid(${ruleEngineRulesTable.event})`,
-          sql`json_extract(${ruleEngineRulesTable.event}, '$.type') IN ('addedToList', 'removedFromList')`,
-          sql`EXISTS (
-            SELECT 1
-            FROM json_each(json_extract(${ruleEngineRulesTable.event}, '$.listIds'))
-            WHERE value = ${this.list.id}
-          )`,
+          ruleEventReferencesList(this.list.id),
         ),
       );
     const rulesToDelete: string[] = [];
@@ -557,8 +587,9 @@ export abstract class List {
             eq(bookmarkLists.id, this.list.id),
             eq(bookmarkLists.userId, this.ctx.user.id),
           ),
-        );
-      if (res.changes == 0) {
+        )
+        .returning({ id: bookmarkLists.id });
+      if (getMutationCount(res) == 0) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
       await this.cleanupRulesAfterListDeletion(tx);
@@ -722,9 +753,10 @@ export abstract class List {
           eq(listCollaborators.listId, this.list.id),
           eq(listCollaborators.userId, userId),
         ),
-      );
+      )
+      .returning({ id: listCollaborators.id });
 
-    if (result.changes === 0) {
+    if (getMutationCount(result) === 0) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Collaborator not found",
@@ -753,9 +785,10 @@ export abstract class List {
           eq(listCollaborators.listId, this.list.id),
           eq(listCollaborators.userId, this.ctx.user.id),
         ),
-      );
+      )
+      .returning({ id: listCollaborators.id });
 
-    if (result.changes === 0) {
+    if (getMutationCount(result) === 0) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Collaborator not found",
@@ -780,9 +813,10 @@ export abstract class List {
           eq(listCollaborators.listId, this.list.id),
           eq(listCollaborators.userId, userId),
         ),
-      );
+      )
+      .returning({ id: listCollaborators.id });
 
-    if (result.changes === 0) {
+    if (getMutationCount(result) === 0) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Collaborator not found",
@@ -1070,8 +1104,9 @@ export class ManualList extends List {
           eq(bookmarksInLists.listId, this.list.id),
           eq(bookmarksInLists.bookmarkId, bookmarkId),
         ),
-      );
-    if (deleted.changes == 0) {
+      )
+      .returning({ bookmarkId: bookmarksInLists.bookmarkId });
+    if (getMutationCount(deleted) == 0) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: `Bookmark ${bookmarkId} is already not in list ${this.list.id}`,

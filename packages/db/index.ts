@@ -28,6 +28,30 @@ export function isPrimaryKeyConstraintError(error: unknown) {
   return code === "SQLITE_CONSTRAINT_PRIMARYKEY" || code === "23505";
 }
 
+export function getMutationCount(result: unknown) {
+  if (Array.isArray(result)) {
+    return result.length;
+  }
+
+  if (!result || typeof result !== "object") {
+    return 0;
+  }
+
+  if ("changes" in result && typeof result.changes === "number") {
+    return result.changes;
+  }
+
+  if ("count" in result && typeof result.count === "number") {
+    return result.count;
+  }
+
+  if ("rowCount" in result && typeof result.rowCount === "number") {
+    return result.rowCount;
+  }
+
+  return 0;
+}
+
 // This is exported here to avoid leaking better-sqlite types outside of this package.
 export type KarakeepDBTransaction = SQLiteTransaction<
   "sync",

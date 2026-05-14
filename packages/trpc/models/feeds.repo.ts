@@ -2,6 +2,7 @@ import { count, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import type { DB } from "@karakeep/db";
+import { getMutationCount } from "@karakeep/db";
 import { rssFeedsTable } from "@karakeep/db/schema";
 import {
   zNewFeedSchema,
@@ -55,8 +56,9 @@ export class FeedsRepo {
   async delete(id: string): Promise<boolean> {
     const res = await this.db
       .delete(rssFeedsTable)
-      .where(eq(rssFeedsTable.id, id));
-    return res.changes > 0;
+      .where(eq(rssFeedsTable.id, id))
+      .returning({ id: rssFeedsTable.id });
+    return getMutationCount(res) > 0;
   }
 
   async update(

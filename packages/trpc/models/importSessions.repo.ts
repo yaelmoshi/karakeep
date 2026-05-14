@@ -2,6 +2,7 @@ import { and, count, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 
 import type { DB } from "@karakeep/db";
+import { getMutationCount } from "@karakeep/db";
 import { importSessions, importStagingBookmarks } from "@karakeep/db/schema";
 import {
   zCreateImportSessionRequestSchema,
@@ -61,8 +62,9 @@ export class ImportSessionsRepo {
   async delete(id: string): Promise<boolean> {
     const result = await this.db
       .delete(importSessions)
-      .where(eq(importSessions.id, id));
-    return result.changes > 0;
+      .where(eq(importSessions.id, id))
+      .returning({ id: importSessions.id });
+    return getMutationCount(result) > 0;
   }
 
   async insertStagingBookmarks(

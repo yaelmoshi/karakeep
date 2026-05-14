@@ -22,6 +22,12 @@ steps:
         --build-arg SERVER_VERSION="$${CI_COMMIT_SHA}"
         --destination ghcr.io/sm-moshi/karakeep:$${CI_COMMIT_SHA:0:8}
         --destination ghcr.io/sm-moshi/karakeep:latest
+        --cache=true
+        --cache-repo ghcr.io/sm-moshi/karakeep-cache
+        --cache-run-layers=true
+        --cache-copy-layers=true
+        --cache-ttl=336h
+        --compressed-caching=false
         --snapshot-mode=redo
 
   - name: trivy-scan

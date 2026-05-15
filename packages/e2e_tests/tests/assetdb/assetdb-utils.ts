@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import { randomBytes } from "crypto";
 import {
   CreateBucketCommand,
   DeleteBucketCommand,
@@ -28,9 +29,9 @@ export function createTestAssetData(
   overrides: Partial<TestAssetData> = {},
 ): TestAssetData {
   const defaultData: TestAssetData = {
-    userId: `user_${Math.random().toString(36).substring(7)}`,
-    assetId: `asset_${Math.random().toString(36).substring(7)}`,
-    content: Buffer.from(`Test content ${Math.random()}`),
+    userId: `user_${randomBytes(8).toString("hex")}`,
+    assetId: `asset_${randomBytes(8).toString("hex")}`,
+    content: Buffer.from(`Test content ${randomBytes(8).toString("hex")}`),
     metadata: {
       contentType: ASSET_TYPES.TEXT_HTML,
       fileName: "test.html",

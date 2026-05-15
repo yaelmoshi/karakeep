@@ -1,3 +1,5 @@
+ARG DHI_NODE_VERSION=24.15.0
+
 ################# Monolith Builder ##############
 FROM rust:1-bookworm AS monolith_builder
 
@@ -9,7 +11,7 @@ RUN apt-get update \
     && cargo install monolith
 
 ################# Base Builder ##############
-FROM node:24-slim AS base
+FROM dhi.io/node:${DHI_NODE_VERSION}-debian13-dev AS base
 
 WORKDIR /app
 ENV PNPM_HOME="/pnpm"
@@ -77,7 +79,7 @@ RUN pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karak
 
 ################# The All-in-one builder ##############
 
-FROM node:24-slim AS aio_builder
+FROM dhi.io/node:${DHI_NODE_VERSION}-debian13-dev AS aio_builder
 LABEL org.opencontainers.image.source="https://github.com/karakeep-app/karakeep"
 WORKDIR /app
 
@@ -215,7 +217,7 @@ USER node
 
 ################# The cli ##############
 
-FROM node:24-slim AS cli
+FROM dhi.io/node:${DHI_NODE_VERSION}-debian13 AS cli
 LABEL org.opencontainers.image.source="https://github.com/karakeep-app/karakeep"
 WORKDIR /app
 
@@ -230,7 +232,7 @@ ENTRYPOINT ["node", "index.mjs"]
 
 ################# MCP server ##############
 
-FROM node:24-slim AS mcp
+FROM dhi.io/node:${DHI_NODE_VERSION}-debian13 AS mcp
 LABEL org.opencontainers.image.source="https://github.com/karakeep-app/karakeep"
 WORKDIR /app
 

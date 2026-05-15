@@ -1,4 +1,6 @@
-FROM node:24-alpine
+ARG DHI_NODE_VERSION=24.15.0
+
+FROM dhi.io/node:${DHI_NODE_VERSION}-alpine3.23-dev
 
 WORKDIR /app
 ENV PNPM_HOME="/pnpm"

@@ -14,14 +14,21 @@ steps:
       - event: push
         branch: main
     image: dhi.io/node:24.15.0-debian13-dev@sha256:bb3cc390be776ca02e6c155cba987b610f8755d561fc42261622f7a2d04c9a22
+    volumes:
+      - woodpecker-pipeline-cache:/woodpecker/cache
     environment:
+      COREPACK_HOME: /woodpecker/cache/karakeep/corepack
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      PNPM_STORE_DIR: /woodpecker/cache/karakeep/pnpm-store
+      TURBO_CACHE_DIR: /woodpecker/cache/karakeep/turbo
     commands:
+      - mkdir -p "$COREPACK_HOME" "$PNPM_STORE_DIR" "$TURBO_CACHE_DIR"
       - apt-get update
       - apt-get install --no-install-recommends -y make g++ python3 python3-pip
       - rm -rf /var/lib/apt/lists/*
       - npm install -g corepack@0.31.0
       - corepack enable
+      - pnpm config set store-dir "$PNPM_STORE_DIR"
       - pnpm install --frozen-lockfile --config.package-import-method=copy
       - pnpm preflight
 

@@ -1,5 +1,5 @@
 # Karakeep fork image.
-# Pushes the all-in-one runtime to: ghcr.io/sm-moshi/karakeep
+# Pushes the Postgres-only all-in-one runtime to: ghcr.io/sm-moshi/karakeep
 when:
   - event: manual
   - event: pull_request
@@ -39,7 +39,7 @@ steps:
       repo: ghcr.io/sm-moshi/karakeep
       dockerfile: docker/Dockerfile
       context: .
-      target: aio
+      target: aio-postgres
       tags:
         - "${CI_COMMIT_SHA:0:8}"
         - latest

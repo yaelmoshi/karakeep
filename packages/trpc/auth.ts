@@ -127,8 +127,7 @@ export async function authenticateApiKey(key: string, database: Context["db"]) {
       validation = await bcrypt.compare(keySecret, hash);
       break;
     case 2:
-      validation =
-        createHash("sha256").update(keySecret).digest("base64") == hash;
+      validation = await bcrypt.compare(keySecret, hash);
       break;
     default:
       throw new Error("Invalid API Key");

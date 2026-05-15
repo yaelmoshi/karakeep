@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getInMemoryDB } from "@karakeep/db/drizzle";
+import { getInMemoryDB } from "@karakeep/db/sqlite";
 import {
   bookmarkLinks,
   bookmarkLists,

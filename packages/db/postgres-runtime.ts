@@ -1,13 +1,14 @@
-import { migrate as migratePostgres } from "drizzle-orm/postgres-js/migrator";
 import { drizzle as drizzlePostgres } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 import serverConfig from "@karakeep/shared/config";
 
-if (serverConfig.database.driver === "postgres") {
+import * as pgSchema from "./schema.pg";
+
+export function createPostgresDatabase() {
   const sql = serverConfig.database.url
     ? postgres(serverConfig.database.url, {
-        max: 1,
+        max: 10,
         prepare: false,
       })
     : postgres({
@@ -17,16 +18,9 @@ if (serverConfig.database.driver === "postgres") {
         username: serverConfig.database.postgres.user,
         password: serverConfig.database.postgres.password,
         ssl: serverConfig.database.postgres.ssl,
-        max: 1,
+        max: 10,
         prepare: false,
       });
-  const db = drizzlePostgres(sql);
 
-  await migratePostgres(db, { migrationsFolder: "./drizzle-pg" });
-  await sql.end();
-} else {
-  const { db } = await import("./drizzle");
-  const { runSqliteMigrations } = await import("./sqlite");
-
-  runSqliteMigrations(db);
+  return drizzlePostgres(sql, { schema: pgSchema });
 }

@@ -1,4 +1,5 @@
 import { PluginManager } from "@karakeep/shared/plugins";
+import serverConfig from "@karakeep/shared/config";
 
 let pluginsLoaded = false;
 export async function loadAllPlugins() {
@@ -7,7 +8,11 @@ export async function loadAllPlugins() {
   }
   // Load plugins here. Order of plugin loading matter.
   // Queue provider(s)
-  await import("@karakeep/plugins/queue-liteque");
+  if (serverConfig.database.driver === "postgres") {
+    await import("@karakeep/plugins/queue-postgres");
+  } else {
+    await import("@karakeep/plugins/queue-liteque");
+  }
   await import("@karakeep/plugins/queue-restate");
   await import("@karakeep/plugins/search-meilisearch");
   // Rate limiters (order matters - last one wins)

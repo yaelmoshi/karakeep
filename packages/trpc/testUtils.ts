@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import { getInMemoryDB } from "@karakeep/db/drizzle";
+import { getInMemoryDB } from "@karakeep/db/sqlite";
 import { users } from "@karakeep/db/schema";
 
 import type { Context } from "./index";

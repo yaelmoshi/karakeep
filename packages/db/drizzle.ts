@@ -1,79 +1,19 @@
 import "dotenv/config";
 
-import path from "path";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import { drizzle as drizzlePostgres } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-
 import serverConfig from "@karakeep/shared/config";
 
-import dbConfig from "./drizzle.config";
-import { instrumentDatabase } from "./instrumentation";
-import * as schema from "./schema";
-import * as pgSchema from "./schema.pg";
+import { createPostgresDatabase } from "./postgres-runtime";
 
-function createSqliteDatabase() {
-  const sqlite = new Database(dbConfig.dbCredentials.url);
+type SqliteDB = ReturnType<typeof import("./sqlite").createSqliteDatabase>;
 
-  if (serverConfig.database.walMode) {
-    sqlite.pragma("journal_mode = WAL");
-    sqlite.pragma("synchronous = NORMAL");
-  } else {
-    sqlite.pragma("journal_mode = DELETE");
-  }
-  sqlite.pragma("cache_size = -65536");
-  sqlite.pragma("foreign_keys = ON");
-  sqlite.pragma("temp_store = MEMORY");
-
-  instrumentDatabase(sqlite);
-
-  return drizzle(sqlite, { schema });
-}
-
-function createPostgresDatabase() {
-  const sql = serverConfig.database.url
-    ? postgres(serverConfig.database.url, {
-        max: 10,
-        prepare: false,
-      })
-    : postgres({
-        host: serverConfig.database.postgres.host,
-        port: serverConfig.database.postgres.port,
-        database: serverConfig.database.postgres.database,
-        username: serverConfig.database.postgres.user,
-        password: serverConfig.database.postgres.password,
-        ssl: serverConfig.database.postgres.ssl,
-        max: 10,
-        prepare: false,
-      });
-
-  return drizzlePostgres(sql, { schema: pgSchema });
-}
-
-function createDatabase() {
+async function createDatabase(): Promise<SqliteDB> {
   if (serverConfig.database.driver === "postgres") {
-    return createPostgresDatabase() as unknown as ReturnType<
-      typeof createSqliteDatabase
-    >;
+    return createPostgresDatabase() as unknown as SqliteDB;
   }
 
+  const { createSqliteDatabase } = await import("./sqlite");
   return createSqliteDatabase();
 }
 
-export const db = createDatabase();
+export const db = await createDatabase();
 export type DB = typeof db;
-
-export function getInMemoryDB(runMigrations: boolean) {
-  if (serverConfig.database.driver === "postgres") {
-    throw new Error("getInMemoryDB is only available for the SQLite driver.");
-  }
-
-  const mem = new Database(":memory:");
-  const db = drizzle(mem, { schema, logger: false });
-  if (runMigrations) {
-    migrate(db, { migrationsFolder: path.resolve(__dirname, "./drizzle") });
-  }
-  return db;
-}

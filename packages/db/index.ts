@@ -1,13 +1,8 @@
-import Database from "better-sqlite3";
-import { ExtractTablesWithRelations } from "drizzle-orm";
-import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
-
-import * as schema from "./schema";
+import type { DB } from "./drizzle";
 
 export { db } from "./drizzle";
 export type { DB } from "./drizzle";
 export * as schema from "./schema";
-export { SqliteError } from "better-sqlite3";
 
 function getDatabaseErrorCode(error: unknown) {
   return error &&
@@ -52,10 +47,10 @@ export function getMutationCount(result: unknown) {
   return 0;
 }
 
-// This is exported here to avoid leaking better-sqlite types outside of this package.
-export type KarakeepDBTransaction = SQLiteTransaction<
-  "sync",
-  Database.RunResult,
-  typeof schema,
-  ExtractTablesWithRelations<typeof schema>
->;
+type TransactionOf<T> = T extends {
+  transaction(callback: (tx: infer Tx, ...args: never[]) => unknown): unknown;
+}
+  ? Tx
+  : never;
+
+export type KarakeepDBTransaction = TransactionOf<DB>;

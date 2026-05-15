@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { getInMemoryDB } from "@karakeep/db/drizzle";
+import { getInMemoryDB } from "@karakeep/db/sqlite";
 import {
   bookmarkAssets,
   bookmarkLinks,

@@ -131,8 +131,8 @@ importers:
         specifier: ^2.4.1
         version: 2.4.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       class-variance-authority:
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.7.1
+        version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -225,7 +225,7 @@ importers:
         specifier: ^11.17.0
         version: 11.17.0(typescript@5.9.3)
       '@tsconfig/node22':
-        specifier: ^22.0.0
+        specifier: ^22.0.5
         version: 22.0.5
       chalk:
         specifier: ^5.6.2
@@ -267,8 +267,8 @@ importers:
         specifier: 6.3.2
         version: 6.3.2(@types/node@25.7.0)(idb-keyval@6.2.2)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@2.80.0)(sass@1.89.1)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.3)
       class-variance-authority:
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.7.1
+        version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -341,7 +341,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@tsconfig/node22':
-        specifier: ^22.0.0
+        specifier: ^22.0.5
         version: 22.0.5
       '@types/turndown':
         specifier: ^5.0.6
@@ -404,8 +404,8 @@ importers:
         specifier: 5.90.2
         version: 5.90.2(react@19.2.6)
       class-variance-authority:
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.7.1
+        version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -699,14 +699,14 @@ importers:
         specifier: ^11.17.0
         version: 11.17.0(@tanstack/react-query@5.90.2(react@19.2.6))(@trpc/client@11.17.0(@trpc/server@11.17.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.17.0(typescript@5.9.3))(react@19.2.6)(typescript@5.9.3)
       better-sqlite3:
-        specifier: ^11.3.0
-        version: 11.3.0
+        specifier: ^11.10.0
+        version: 11.10.0
       cheerio:
         specifier: ^1.2.0
         version: 1.2.0
       class-variance-authority:
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.7.1
+        version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -721,7 +721,7 @@ importers:
         version: 3.6.0
       drizzle-orm:
         specifier: ^0.45.2
-        version: 0.45.2(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.3.0)(postgres@3.4.9)
+        version: 0.45.2(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.10.0)(postgres@3.4.9)
       fastest-levenshtein:
         specifier: ^1.0.16
         version: 1.0.16
@@ -886,7 +886,7 @@ importers:
         specifier: 1.19.14
         version: 1.19.14(hono@4.12.18)
       '@hono/prometheus':
-        specifier: ^1.0.2
+        specifier: ^1.0.3
         version: 1.0.3(hono@4.12.18)(prom-client@15.1.3)
       '@karakeep/db':
         specifier: workspace:^0.1.0
@@ -907,7 +907,7 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       '@tsconfig/node22':
-        specifier: ^22.0.0
+        specifier: ^22.0.5
         version: 22.0.5
       archiver:
         specifier: ^7.0.1
@@ -916,17 +916,17 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1
       better-sqlite3:
-        specifier: ^11.3.0
-        version: 11.3.0
+        specifier: ^11.10.0
+        version: 11.10.0
       dompurify:
         specifier: 3.4.3
         version: 3.4.3
       dotenv:
-        specifier: ^16.4.1
-        version: 16.4.5
+        specifier: ^16.6.1
+        version: 16.6.1
       drizzle-orm:
         specifier: ^0.45.2
-        version: 0.45.2(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.3.0)(postgres@3.4.9)
+        version: 0.45.2(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.10.0)(postgres@3.4.9)
       execa:
         specifier: 9.6.1
         version: 9.6.1
@@ -950,7 +950,7 @@ importers:
         version: 24.1.3
       liteque:
         specifier: ^0.8.0
-        version: 0.8.0(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.3.0)(postgres@3.4.9)
+        version: 0.8.0(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.10.0)(postgres@3.4.9)
       lru-cache:
         specifier: ^11.3.6
         version: 11.3.6
@@ -1646,7 +1646,7 @@ importers:
   tooling/typescript:
     devDependencies:
       '@tsconfig/node22':
-        specifier: ^22.0.0
+        specifier: ^22.0.5
         version: 22.0.5
 
   tools/compare-models:
@@ -8488,9 +8488,6 @@ packages:
   better-sqlite3@11.10.0:
     resolution: {integrity: sha512-EwhOpyXiOEL/lKzHz9AW1msWFNzGc/z+LzeB3/jnFJpxu+th2yqvzsSWas1v9jgs9+xiXJcD5A8CJxAG2TaghQ==}
 
-  better-sqlite3@11.3.0:
-    resolution: {integrity: sha512-iHt9j8NPYF3oKCNOO5ZI4JwThjt3Z6J6XrcwG85VNMVzv1ByqrHWv5VILEbCMFWDsoHhXvQ7oC8vgRXFAKgl9w==}
-
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
 
@@ -8809,9 +8806,6 @@ packages:
     resolution: {integrity: sha512-77PSwercCZU2Fc4sX94eF8k8Pxte6JAwL4/ICZLFjJLqegs7kCuAsqqj/70NQF6TvDpgFjkubQB2FW2ZZddvQg==}
     engines: {node: '>=8'}
 
-  class-variance-authority@0.7.0:
-    resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
-
   class-variance-authority@0.7.1:
     resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
 
@@ -8869,10 +8863,6 @@ packages:
 
   clsx@1.2.1:
     resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
-    engines: {node: '>=6'}
-
-  clsx@2.0.0:
-    resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
 
   clsx@2.1.1:
@@ -9540,6 +9530,10 @@ packages:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
 
+  detect-libc@2.1.2:
+    resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
+    engines: {node: '>=8'}
+
   detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
 
@@ -9655,10 +9649,6 @@ packages:
 
   dotenv-expand@11.0.7:
     resolution: {integrity: sha512-zIHwmZPRshsCdpMDyVsqGmgyP0yT8GAgXUnkdAoJisxvf33k7yO6OuoKmcTGuXPWSsm8Oh88nZicRLA9Y0rUeA==}
-    engines: {node: '>=12'}
-
-  dotenv@16.4.5:
-    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
   dotenv@16.4.7:
@@ -9838,9 +9828,6 @@ packages:
 
   encoding-sniffer@0.2.1:
     resolution: {integrity: sha512-5gvq20T6vfpekVtqrYQsSCFZ1wEg5+wW0/QaZMWkFr6BqD3NfKs0rLCx4rrVlSWJeZb5NBJgVLswK/w2MWU+Gw==}
-
-  end-of-stream@1.4.4:
-    resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
 
   end-of-stream@1.4.5:
     resolution: {integrity: sha512-ooEGc6HP26xXq/N+GCGOT0JKCLDGrq2bQUZrQ7gyrJiZANJ/8YDTxTpQBXGMn+WbIQXNVpyWymm7KYVICQnyOg==}
@@ -12984,8 +12971,8 @@ packages:
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
 
-  node-abi@3.75.0:
-    resolution: {integrity: sha512-OhYaY5sDsIka7H7AtijtI9jwGYLyl29eQn/W623DiN/MIv5sUqc4g7BIDThX+gb7di9f6xK02nkp8sdfFWZLTg==}
+  node-abi@3.92.0:
+    resolution: {integrity: sha512-KdHvFWZjEKDf0cakgFjebl371GPsISX2oZHcuyKqM7DtogIsHrqKeLTo8wBHxaXRAQlY2PsPlZmfo+9ZCxEREQ==}
     engines: {node: '>=10'}
 
   node-addon-api@7.1.1:
@@ -14294,9 +14281,6 @@ packages:
 
   psl@1.15.0:
     resolution: {integrity: sha512-JZd3gMVBAVQkSs6HdNZo9Sdo0LNcQeMNP3CozBJb3JYC/QUYZTnKxP+f8oWRX4rHP5EurWxqAHTSwUCjlNKa1w==}
-
-  pump@3.0.2:
-    resolution: {integrity: sha512-tUPXtzlGM8FE3P0ZL6DVs/3P58k9nk8/jZeQCurTJylQA8qFYzHFfhBJkuqyE0FifOsQ0uKWekiZ5g8wtr28cw==}
 
   pump@3.0.4:
     resolution: {integrity: sha512-VS7sjc6KR7e1ukRFhQSY5LM2uBWAUPiOPa/A3mkKmiMwSmRFUITt0xuj+/lesgnCv+dPIEYlkzrcyXgquIHMcA==}
@@ -25993,11 +25977,6 @@ snapshots:
       bindings: 1.5.0
       prebuild-install: 7.1.3
 
-  better-sqlite3@11.3.0:
-    dependencies:
-      bindings: 1.5.0
-      prebuild-install: 7.1.3
-
   bidi-js@1.0.3:
     dependencies:
       require-from-string: 2.0.2
@@ -26382,10 +26361,6 @@ snapshots:
 
   ci-info@4.4.0: {}
 
-  class-variance-authority@0.7.0:
-    dependencies:
-      clsx: 2.0.0
-
   class-variance-authority@0.7.1:
     dependencies:
       clsx: 2.1.1
@@ -26444,8 +26419,6 @@ snapshots:
   clone@1.0.4: {}
 
   clsx@1.2.1: {}
-
-  clsx@2.0.0: {}
 
   clsx@2.1.1: {}
 
@@ -27127,6 +27100,8 @@ snapshots:
 
   detect-libc@2.0.4: {}
 
+  detect-libc@2.1.2: {}
+
   detect-node-es@1.1.0: {}
 
   detect-node@2.1.0: {}
@@ -27307,8 +27282,6 @@ snapshots:
     dependencies:
       dotenv: 16.4.7
 
-  dotenv@16.4.5: {}
-
   dotenv@16.4.7: {}
 
   dotenv@16.6.1: {}
@@ -27325,13 +27298,6 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       '@types/better-sqlite3': 7.6.13
       better-sqlite3: 11.10.0
-      postgres: 3.4.9
-
-  drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.3.0)(postgres@3.4.9):
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.1
-      '@types/better-sqlite3': 7.6.13
-      better-sqlite3: 11.3.0
       postgres: 3.4.9
 
   dset@3.1.4: {}
@@ -27385,10 +27351,6 @@ snapshots:
     dependencies:
       iconv-lite: 0.6.3
       whatwg-encoding: 3.1.1
-
-  end-of-stream@1.4.4:
-    dependencies:
-      once: 1.4.0
 
   end-of-stream@1.4.5:
     dependencies:
@@ -28478,7 +28440,7 @@ snapshots:
 
   get-stream@4.1.0:
     dependencies:
-      pump: 3.0.2
+      pump: 3.0.4
 
   get-stream@5.2.0:
     dependencies:
@@ -29928,42 +29890,6 @@ snapshots:
       async-mutex: 0.4.1
       better-sqlite3: 11.10.0
       drizzle-orm: 0.45.2(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.10.0)(postgres@3.4.9)
-      zod: 4.4.3
-    transitivePeerDependencies:
-      - '@aws-sdk/client-rds-data'
-      - '@cloudflare/workers-types'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@libsql/client-wasm'
-      - '@neondatabase/serverless'
-      - '@op-engineering/op-sqlite'
-      - '@opentelemetry/api'
-      - '@planetscale/database'
-      - '@prisma/client'
-      - '@tidbcloud/serverless'
-      - '@types/better-sqlite3'
-      - '@types/pg'
-      - '@types/sql.js'
-      - '@upstash/redis'
-      - '@vercel/postgres'
-      - '@xata.io/client'
-      - bun-types
-      - expo-sqlite
-      - gel
-      - knex
-      - kysely
-      - mysql2
-      - pg
-      - postgres
-      - prisma
-      - sql.js
-      - sqlite3
-
-  liteque@0.8.0(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.3.0)(postgres@3.4.9):
-    dependencies:
-      async-mutex: 0.4.1
-      better-sqlite3: 11.3.0
-      drizzle-orm: 0.45.2(@opentelemetry/api@1.9.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@11.3.0)(postgres@3.4.9)
       zod: 4.4.3
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
@@ -31725,7 +31651,7 @@ snapshots:
       lower-case: 2.0.2
       tslib: 2.8.1
 
-  node-abi@3.75.0:
+  node-abi@3.92.0:
     dependencies:
       semver: 7.8.0
 
@@ -32956,14 +32882,14 @@ snapshots:
 
   prebuild-install@7.1.3:
     dependencies:
-      detect-libc: 2.0.4
+      detect-libc: 2.1.2
       expand-template: 2.0.3
       github-from-package: 0.0.0
       minimist: 1.2.8
       mkdirp-classic: 0.5.3
       napi-build-utils: 2.0.0
-      node-abi: 3.75.0
-      pump: 3.0.2
+      node-abi: 3.92.0
+      pump: 3.0.4
       rc: 1.2.8
       simple-get: 4.0.1
       tar-fs: 2.1.4
@@ -33070,11 +32996,6 @@ snapshots:
   psl@1.15.0:
     dependencies:
       punycode: 2.3.1
-
-  pump@3.0.2:
-    dependencies:
-      end-of-stream: 1.4.4
-      once: 1.4.0
 
   pump@3.0.4:
     dependencies:
@@ -35323,13 +35244,13 @@ snapshots:
     dependencies:
       chownr: 1.1.4
       mkdirp-classic: 0.5.3
-      pump: 3.0.2
+      pump: 3.0.4
       tar-stream: 2.2.0
 
   tar-stream@2.2.0:
     dependencies:
       bl: 4.1.0
-      end-of-stream: 1.4.4
+      end-of-stream: 1.4.5
       fs-constants: 1.0.0
       inherits: 2.0.4
       readable-stream: 3.6.2

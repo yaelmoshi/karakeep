@@ -8,6 +8,13 @@
       "when": 1778728532380,
       "tag": "0000_dark_talos",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778832000000,
+      "tag": "0001_postgres_queue",
+      "breakpoints": true
     }
   ]
 }

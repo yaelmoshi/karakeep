@@ -1,4 +1,3 @@
-import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 
 import { isIOS26 } from "./ios";
@@ -14,7 +13,7 @@ import { isIOS26 } from "./ios";
  * - `contentStyle.paddingBottom: 100` compensates for the native tab bar overlapping
  *   content. Should be removed when expo fixes this in SDK 55.
  */
-export const tabScreenOptions: NativeStackNavigationOptions = {
+export const tabScreenOptions = {
   ...Platform.select({
     ios: {
       headerLargeTitle: true,

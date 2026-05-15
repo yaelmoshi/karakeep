@@ -153,7 +153,8 @@ ENV NEXTAUTH_URL_INTERNAL=http://localhost:${PORT}
 
 # Create symlink for jemalloc based on architecture
 ARG TARGETARCH
-RUN if [ "$TARGETARCH" = "arm64" ]; then \
+RUN mkdir -p /usr/local/lib \
+    && if [ "$TARGETARCH" = "arm64" ]; then \
         ln -s /usr/lib/aarch64-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so; \
     else \
         ln -s /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so; \

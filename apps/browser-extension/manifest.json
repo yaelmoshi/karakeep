@@ -38,7 +38,10 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "addon@karakeep.app"
+      "id": "addon@karakeep.app",
+      "data_collection_permissions": {
+        "required": []
+      }
     }
   },
   "content_security_policy": {

@@ -24,7 +24,7 @@
     "@karakeep/shared": "workspace:*",
     "@restatedev/restate-sdk": "^1.14.3",
     "@restatedev/restate-sdk-clients": "^1.14.3",
-    "async-mutex": "^0.4.1",
+    "async-mutex": "^0.5.0",
     "meilisearch": "^0.45.0",
     "postgres": "^3.4.9",
     "redis": "^5.12.1"

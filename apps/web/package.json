@@ -28,6 +28,7 @@
     "@karakeep/shared-react": "workspace:^0.1.0",
     "@karakeep/shared-server": "workspace:^0.1.0",
     "@karakeep/trpc": "workspace:^0.1.0",
+    "@lexical/code": "^0.44.0",
     "@lexical/list": "^0.44.0",
     "@lexical/markdown": "^0.44.0",
     "@lexical/plain-text": "^0.44.0",

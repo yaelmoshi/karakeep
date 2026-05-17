@@ -11,8 +11,6 @@ steps:
     when:
       - event: manual
       - event: pull_request
-      - event: push
-        branch: main
     image: harbor.m0sh1.cc/apps/karakeep-node-ci-deps:ed310d1b@sha256:3b112e55dedc6b021dc8be1dfa25d6f77d95c981c0ee003f1fdc82901c3b3c8a
     environment:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"

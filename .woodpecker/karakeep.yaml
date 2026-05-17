@@ -25,7 +25,7 @@ steps:
       - cd /tmp/karakeep-ci
       - pnpm config set store-dir "$PNPM_STORE_DIR"
       - pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
-      - pnpm exec turbo run --no-daemon --concurrency=2 typecheck lint format
+      - pnpm exec turbo run --no-daemon --concurrency=1 typecheck lint format
 
   - name: build-and-push-ghcr
     when:

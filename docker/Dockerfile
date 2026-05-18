@@ -53,7 +53,7 @@ COPY ./patches ./patches
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Avoid pnpm hardlink collisions in Docker while preserving the repo's hoisted workspace layout.
-RUN pnpm install --frozen-lockfile --config.package-import-method=copy
+RUN pnpm install --frozen-lockfile --config.package-import-method=copy --config.allow-unused-patches=true
 
 COPY . .
 
@@ -76,7 +76,7 @@ RUN (cd apps/cli && /app/node_modules/.bin/vite build && chmod +x dist/index.mjs
 # Build the mcp server
 RUN (cd apps/mcp && /app/node_modules/.bin/vite build && /app/node_modules/.bin/shx chmod +x dist/index.js)
 
-RUN pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers
+RUN pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers --config.allow-unused-patches=true
 
 ################# Postgres-only Base Builder ##############
 FROM dhi.io/node:${DHI_NODE_VERSION}-debian13-dev AS base_postgres
@@ -124,7 +124,7 @@ ENV DB_DRIVER=postgres
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Postgres-only images must not install native SQLite dependencies.
-RUN pnpm install --no-frozen-lockfile --config.package-import-method=copy
+RUN pnpm install --no-frozen-lockfile --config.package-import-method=copy --config.allow-unused-patches=true
 RUN node -e "try { require.resolve('better-sqlite3'); process.exit(1); } catch { process.exit(0); }"
 
 COPY . .
@@ -137,7 +137,7 @@ RUN cd packages/db && \
 
 RUN (cd apps/web && CIRCLE_NODE_TOTAL=2 /app/node_modules/.bin/next build --experimental-build-mode compile)
 RUN (cd apps/workers && /app/node_modules/.bin/tsdown)
-RUN pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers
+RUN pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers --config.allow-unused-patches=true
 
 ################# The All-in-one builder ##############
 

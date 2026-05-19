@@ -42,7 +42,9 @@ import { contentRendererRegistry } from "./content-renderers";
 import ReaderSettingsPopover from "./ReaderSettingsPopover";
 import ReaderView from "./ReaderView";
 
-function CustomRendererErrorFallback({ error }: { error: Error }) {
+function CustomRendererErrorFallback({ error }: { error: unknown }) {
+  const message = error instanceof Error ? error.message : String(error);
+
   return (
     <div className="flex h-full w-full items-center justify-center p-4">
       <Alert variant="destructive" className="max-w-md">
@@ -54,7 +56,7 @@ function CustomRendererErrorFallback({ error }: { error: Error }) {
             <summary className="cursor-pointer text-xs">
               Technical details
             </summary>
-            <code className="mt-1 block text-xs">{error.message}</code>
+            <code className="mt-1 block text-xs">{message}</code>
           </details>
         </AlertDescription>
       </Alert>

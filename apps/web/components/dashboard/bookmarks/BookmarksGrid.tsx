@@ -14,12 +14,10 @@ import {
   useGridColumns,
 } from "@/lib/userLocalSettings/bookmarksLayout";
 import { cn } from "@/lib/utils";
-import tailwindConfig from "@/tailwind.config";
 import { Slot } from "@radix-ui/react-slot";
 import { ErrorBoundary } from "react-error-boundary";
 import { useInView } from "react-intersection-observer";
 import Masonry from "react-masonry-css";
-import resolveConfig from "tailwindcss/resolveConfig";
 
 import type { ZBookmark } from "@karakeep/shared/types/bookmarks";
 import { useBookmarkListContext } from "@karakeep/shared-react/hooks/bookmark-list-context";
@@ -27,6 +25,12 @@ import { useBookmarkListContext } from "@karakeep/shared-react/hooks/bookmark-li
 import BookmarkCard from "./BookmarkCard";
 import EditorCard from "./EditorCard";
 import UnknownCard from "./UnknownCard";
+
+const BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+};
 
 function StyledBookmarkCard({
   children,
@@ -75,8 +79,6 @@ const BookmarkGridItem = memo(function BookmarkGridItem({
 });
 
 function getBreakpointConfig(userColumns: number) {
-  const fullConfig = resolveConfig(tailwindConfig);
-
   const breakpointColumnsObj: { [key: number]: number; default: number } = {
     default: userColumns,
   };
@@ -86,26 +88,20 @@ function getBreakpointConfig(userColumns: number) {
   const mdColumns = Math.max(1, Math.min(userColumns, 2));
   const smColumns = 1;
 
-  breakpointColumnsObj[parseInt(fullConfig.theme.screens.lg)] = lgColumns;
-  breakpointColumnsObj[parseInt(fullConfig.theme.screens.md)] = mdColumns;
-  breakpointColumnsObj[parseInt(fullConfig.theme.screens.sm)] = smColumns;
+  breakpointColumnsObj[BREAKPOINTS.lg] = lgColumns;
+  breakpointColumnsObj[BREAKPOINTS.md] = mdColumns;
+  breakpointColumnsObj[BREAKPOINTS.sm] = smColumns;
   return breakpointColumnsObj;
 }
 
 function getColumnsForViewport(userColumns: number, viewportWidth: number) {
-  const fullConfig = resolveConfig(tailwindConfig);
-  const screens = fullConfig.theme.screens;
-  const lg = parseInt(screens.lg);
-  const md = parseInt(screens.md);
-  const sm = parseInt(screens.sm);
-
-  if (viewportWidth <= sm) {
+  if (viewportWidth <= BREAKPOINTS.sm) {
     return 1;
   }
-  if (viewportWidth <= md) {
+  if (viewportWidth <= BREAKPOINTS.md) {
     return Math.max(1, Math.min(userColumns, 2));
   }
-  if (viewportWidth <= lg) {
+  if (viewportWidth <= BREAKPOINTS.lg) {
     return Math.max(1, userColumns - 1);
   }
   return userColumns;

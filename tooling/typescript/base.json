@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
+    "ignoreDeprecations": "6.0",
     "jsx": "preserve",
     "incremental": true,
     "noUncheckedIndexedAccess": false

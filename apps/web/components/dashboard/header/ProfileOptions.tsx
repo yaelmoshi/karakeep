@@ -17,6 +17,7 @@ import { useSession } from "@/lib/auth/client";
 import { useTranslation } from "@/lib/i18n/client";
 import {
   BookOpen,
+  ExternalLink,
   LogOut,
   Moon,
   Paintbrush,
@@ -24,7 +25,6 @@ import {
   Settings,
   Shield,
   Sun,
-  Twitter,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -136,7 +136,7 @@ export default function SidebarProfileOptions() {
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href="https://x.com/karakeep_app" target="_blank" rel="noreferrer">
-            <Twitter className="mr-2 size-4" />
+            <ExternalLink className="mr-2 size-4" />
             {t("options.follow_us_on_x")}
           </a>
         </DropdownMenuItem>

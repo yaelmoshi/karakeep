@@ -19,6 +19,6 @@ export default defineConfig({
   },
   plugins: [
     tsconfigPaths({ skip: (dir) => dir === ".claude" }),
-    dts({ rollupTypes: true, copyDtsFiles: true }),
+    dts({ bundleTypes: true, copyDtsFiles: true }),
   ],
 });

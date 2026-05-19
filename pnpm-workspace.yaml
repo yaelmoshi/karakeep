@@ -77,5 +77,4 @@ overrides:
   "@babel/plugin-transform-modules-systemjs@<7.29.4": "7.29.4"
   "ip-address@<=10.1.0": "10.2.0"
 patchedDependencies:
-  docusaurus-theme-openapi-docs@4.7.1: patches/docusaurus-theme-openapi-docs@4.7.1.patch
   gray-matter@4.0.3: patches/gray-matter@4.0.3.patch

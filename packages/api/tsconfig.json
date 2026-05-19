@@ -8,6 +8,7 @@
     "node_modules"
   ],
   "compilerOptions": {
+    "moduleResolution": "bundler",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   }
 }

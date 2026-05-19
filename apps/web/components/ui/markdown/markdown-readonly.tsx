@@ -65,44 +65,45 @@ export function MarkdownReadonly({
   };
 
   return (
-    <Markdown
-      remarkPlugins={[remarkGfm, remarkBreaks]}
-      className={cn("prose dark:prose-invert", className)}
-      components={{
-        input: (props) =>
-          props.type === "checkbox" ? (
-            <input
-              checked={props.checked}
-              onChange={handleTodoClick}
-              type="checkbox"
-              className="todo-checkbox"
-            />
-          ) : (
-            <input {...props} readOnly />
-          ),
-        pre({ ...props }) {
-          return <PreWithCopyBtn {...props} />;
-        },
-        code({ className, children, ref: _ref, ...props }) {
-          const match = /language-(\w+)/.exec(className ?? "");
-          return match ? (
-            <SyntaxHighlighter
-              PreTag="div"
-              language={match[1]}
-              {...props}
-              style={dracula}
-            >
-              {String(children).replace(/\n$/, "")}
-            </SyntaxHighlighter>
-          ) : (
-            <code className={className} {...props}>
-              {children}
-            </code>
-          );
-        },
-      }}
-    >
-      {markdown}
-    </Markdown>
+    <div className={cn("prose dark:prose-invert", className)}>
+      <Markdown
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        components={{
+          input: (props) =>
+            props.type === "checkbox" ? (
+              <input
+                checked={props.checked}
+                onChange={handleTodoClick}
+                type="checkbox"
+                className="todo-checkbox"
+              />
+            ) : (
+              <input {...props} readOnly />
+            ),
+          pre({ ...props }) {
+            return <PreWithCopyBtn {...props} />;
+          },
+          code({ className, children, ref: _ref, ...props }) {
+            const match = /language-(\w+)/.exec(className ?? "");
+            return match ? (
+              <SyntaxHighlighter
+                PreTag="div"
+                language={match[1]}
+                {...props}
+                style={dracula}
+              >
+                {String(children).replace(/\n$/, "")}
+              </SyntaxHighlighter>
+            ) : (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+          },
+        }}
+      >
+        {markdown}
+      </Markdown>
+    </div>
   );
 }

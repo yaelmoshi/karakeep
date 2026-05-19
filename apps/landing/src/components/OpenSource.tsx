@@ -1,6 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Github } from "lucide-react";
+import { GitFork } from "lucide-react";
 
 import { DOCS_LINK, GITHUB_LINK } from "../constants";
 
@@ -8,7 +8,7 @@ export default function OpenSource() {
   return (
     <section className="bg-gray-900 px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-4xl text-center">
-        <Github className="mx-auto size-12 text-white" />
+        <GitFork className="mx-auto size-12 text-white" />
         <h2 className="mt-6 text-3xl font-bold tracking-tight text-white sm:text-4xl">
           Open Source & Self-Hostable
         </h2>
@@ -27,7 +27,7 @@ export default function OpenSource() {
               buttonVariants({ size: "lg" }),
             )}
           >
-            <Github className="size-5" /> View on GitHub
+            <GitFork className="size-5" /> View on GitHub
           </a>
           <a
             href={`${DOCS_LINK}/installation/docker`}

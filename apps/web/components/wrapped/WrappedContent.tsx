@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import {
   BookOpen,
   Calendar,
-  Chrome,
   Clock,
   Code,
   FileText,
@@ -15,6 +14,7 @@ import {
   Heart,
   Highlighter,
   Link,
+  PanelsTopLeft,
   Rss,
   Smartphone,
   Upload,
@@ -80,7 +80,7 @@ function getSourceIcon(source: BookmarkSource | null, className = "h-5 w-5") {
     case "web":
       return <Globe {...iconProps} />;
     case "extension":
-      return <Chrome {...iconProps} />;
+      return <PanelsTopLeft {...iconProps} />;
     case "cli":
       return <Code {...iconProps} />;
     case "mobile":

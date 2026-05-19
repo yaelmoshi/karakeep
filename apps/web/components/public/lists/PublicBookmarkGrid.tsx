@@ -10,12 +10,10 @@ import { badgeVariants } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import tailwindConfig from "@/tailwind.config";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Expand, FileIcon, ImageIcon } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 import Masonry from "react-masonry-css";
-import resolveConfig from "tailwindcss/resolveConfig";
 
 import { useTRPC } from "@karakeep/shared-react/trpc";
 import {
@@ -23,6 +21,12 @@ import {
   ZPublicBookmark,
 } from "@karakeep/shared/types/bookmarks";
 import { ZCursor } from "@karakeep/shared/types/pagination";
+
+const BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+};
 
 function TagPill({ tag }: { tag: string }) {
   return (
@@ -173,14 +177,12 @@ function BookmarkCard({ bookmark }: { bookmark: ZPublicBookmark }) {
 }
 
 function getBreakpointConfig() {
-  const fullConfig = resolveConfig(tailwindConfig);
-
   const breakpointColumnsObj: { [key: number]: number; default: number } = {
     default: 3,
   };
-  breakpointColumnsObj[parseInt(fullConfig.theme.screens.lg)] = 2;
-  breakpointColumnsObj[parseInt(fullConfig.theme.screens.md)] = 1;
-  breakpointColumnsObj[parseInt(fullConfig.theme.screens.sm)] = 1;
+  breakpointColumnsObj[BREAKPOINTS.lg] = 2;
+  breakpointColumnsObj[BREAKPOINTS.md] = 1;
+  breakpointColumnsObj[BREAKPOINTS.sm] = 1;
   return breakpointColumnsObj;
 }
 

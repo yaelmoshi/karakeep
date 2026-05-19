@@ -1,14 +1,11 @@
 import React from "react";
 import { Platform } from "react-native";
-import {
-  Icon,
-  Label,
-  NativeTabs,
-  VectorIcon,
-} from "expo-router/unstable-native-tabs";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { isIOS26 } from "@/lib/ios";
 import { useColorScheme } from "@/lib/useColorScheme";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
+const VectorIcon = NativeTabs.Trigger.VectorIcon;
 
 export default function TabLayout() {
   const { colors } = useColorScheme();
@@ -22,41 +19,37 @@ export default function TabLayout() {
       labelVisibilityMode={Platform.select({ android: "labeled" })}
     >
       <NativeTabs.Trigger name="(home)">
-        <Icon
+        <NativeTabs.Trigger.Icon
           sf="house.fill"
-          androidSrc={
-            <VectorIcon family={MaterialCommunityIcons} name="home" />
-          }
+          src={<VectorIcon family={MaterialCommunityIcons} name="home" />}
         />
-        <Label>Home</Label>
+        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(lists)">
-        <Icon
+        <NativeTabs.Trigger.Icon
           sf="list.clipboard.fill"
-          androidSrc={
+          src={
             <VectorIcon family={MaterialCommunityIcons} name="clipboard-list" />
           }
         />
-        <Label>Lists</Label>
+        <NativeTabs.Trigger.Label>Lists</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(tags)">
-        <Icon
+        <NativeTabs.Trigger.Icon
           sf="tag.fill"
-          androidSrc={<VectorIcon family={MaterialCommunityIcons} name="tag" />}
+          src={<VectorIcon family={MaterialCommunityIcons} name="tag" />}
         />
-        <Label>Tags</Label>
+        <NativeTabs.Trigger.Label>Tags</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(highlights)">
-        <Icon
+        <NativeTabs.Trigger.Icon
           sf="highlighter"
-          androidSrc={
-            <VectorIcon family={MaterialCommunityIcons} name="marker" />
-          }
+          src={<VectorIcon family={MaterialCommunityIcons} name="marker" />}
         />
-        <Label>Highlights</Label>
+        <NativeTabs.Trigger.Label>Highlights</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger
@@ -64,13 +57,11 @@ export default function TabLayout() {
         hidden={Platform.OS === "android"}
         role={isIOS26 ? "search" : undefined}
       >
-        <Icon
+        <NativeTabs.Trigger.Icon
           sf="magnifyingglass"
-          androidSrc={
-            <VectorIcon family={MaterialCommunityIcons} name="magnify" />
-          }
+          src={<VectorIcon family={MaterialCommunityIcons} name="magnify" />}
         />
-        <Label>Search</Label>
+        <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );

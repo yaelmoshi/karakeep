@@ -12,7 +12,6 @@ import {
   Archive,
   BarChart3,
   BookOpen,
-  Chrome,
   Clock,
   Code,
   Database,
@@ -25,6 +24,7 @@ import {
   Image,
   Link,
   List,
+  PanelsTopLeft,
   Rss,
   Smartphone,
   TrendingUp,
@@ -84,7 +84,7 @@ function getSourceIcon(source: BookmarkSource | null): React.ReactNode {
     case "web":
       return <Globe {...iconProps} />;
     case "extension":
-      return <Chrome {...iconProps} />;
+      return <PanelsTopLeft {...iconProps} />;
     case "cli":
       return <Code {...iconProps} />;
     case "mobile":

@@ -38,82 +38,75 @@ import { buildImpersonatingAuthedContext } from "../trpc";
 import { fetchBookmarksInBatches } from "./utils/fetchBookmarks";
 
 // Run daily at midnight UTC
-export const BackupSchedulingWorker = cron.schedule(
-  "0 0 * * *",
-  async () => {
-    logger.info("[backup] Scheduling daily backup jobs ...");
-    try {
-      const usersWithBackups = await db.query.users.findMany({
-        columns: {
-          id: true,
-          backupsFrequency: true,
-        },
-        where: eq(users.backupsEnabled, true),
-      });
+export const BackupSchedulingWorker = cron.createTask("0 0 * * *", async () => {
+  logger.info("[backup] Scheduling daily backup jobs ...");
+  try {
+    const usersWithBackups = await db.query.users.findMany({
+      columns: {
+        id: true,
+        backupsFrequency: true,
+      },
+      where: eq(users.backupsEnabled, true),
+    });
 
-      logger.info(
-        `[backup] Found ${usersWithBackups.length} users with backups enabled`,
-      );
+    logger.info(
+      `[backup] Found ${usersWithBackups.length} users with backups enabled`,
+    );
 
-      const now = new Date();
-      const currentDay = now.toISOString().split("T")[0]; // YYYY-MM-DD
+    const now = new Date();
+    const currentDay = now.toISOString().split("T")[0]; // YYYY-MM-DD
 
-      for (const user of usersWithBackups) {
-        // Deterministically schedule backups throughout the day based on user ID
-        // This spreads the load across 24 hours
-        const hash = createHash("sha256").update(user.id).digest("hex");
-        const hashNum = parseInt(hash.substring(0, 8), 16);
+    for (const user of usersWithBackups) {
+      // Deterministically schedule backups throughout the day based on user ID
+      // This spreads the load across 24 hours
+      const hash = createHash("sha256").update(user.id).digest("hex");
+      const hashNum = parseInt(hash.substring(0, 8), 16);
 
-        // For daily: schedule within 24 hours
-        // For weekly: only schedule on the user's designated day of week
-        let shouldSchedule = false;
-        let delayMs = 0;
+      // For daily: schedule within 24 hours
+      // For weekly: only schedule on the user's designated day of week
+      let shouldSchedule = false;
+      let delayMs = 0;
 
-        if (user.backupsFrequency === "daily") {
+      if (user.backupsFrequency === "daily") {
+        shouldSchedule = true;
+        // Spread across 24 hours (86400000 ms)
+        delayMs = hashNum % 86400000;
+      } else if (user.backupsFrequency === "weekly") {
+        // Use hash to determine day of week (0-6)
+        const userDayOfWeek = hashNum % 7;
+        const currentDayOfWeek = now.getDay();
+
+        if (userDayOfWeek === currentDayOfWeek) {
           shouldSchedule = true;
-          // Spread across 24 hours (86400000 ms)
+          // Spread across 24 hours
           delayMs = hashNum % 86400000;
-        } else if (user.backupsFrequency === "weekly") {
-          // Use hash to determine day of week (0-6)
-          const userDayOfWeek = hashNum % 7;
-          const currentDayOfWeek = now.getDay();
-
-          if (userDayOfWeek === currentDayOfWeek) {
-            shouldSchedule = true;
-            // Spread across 24 hours
-            delayMs = hashNum % 86400000;
-          }
-        }
-
-        if (shouldSchedule) {
-          const idempotencyKey = `${user.id}-${currentDay}`;
-
-          await BackupQueue.enqueue(
-            {
-              userId: user.id,
-            },
-            {
-              delayMs,
-              idempotencyKey,
-            },
-          );
-
-          logger.info(
-            `[backup] Scheduled backup for user ${user.id} with delay ${Math.round(delayMs / 1000 / 60)} minutes`,
-          );
         }
       }
 
-      logger.info("[backup] Finished scheduling backup jobs");
-    } catch (error) {
-      logger.error(`[backup] Error scheduling backup jobs: ${error}`);
+      if (shouldSchedule) {
+        const idempotencyKey = `${user.id}-${currentDay}`;
+
+        await BackupQueue.enqueue(
+          {
+            userId: user.id,
+          },
+          {
+            delayMs,
+            idempotencyKey,
+          },
+        );
+
+        logger.info(
+          `[backup] Scheduled backup for user ${user.id} with delay ${Math.round(delayMs / 1000 / 60)} minutes`,
+        );
+      }
     }
-  },
-  {
-    runOnInit: false,
-    scheduled: false,
-  },
-);
+
+    logger.info("[backup] Finished scheduling backup jobs");
+  } catch (error) {
+    logger.error(`[backup] Error scheduling backup jobs: ${error}`);
+  }
+});
 
 export class BackupWorker {
   static async build() {

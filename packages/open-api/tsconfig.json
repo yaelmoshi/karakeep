@@ -4,6 +4,8 @@
   "include": ["**/*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   }
 }

@@ -5,11 +5,13 @@
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "baseUrl": ".",
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "bundler",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "strictNullChecks": true,
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client"]
+    "types": ["node", "vite/client"]
   }
 }

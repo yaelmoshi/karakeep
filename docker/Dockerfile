@@ -200,6 +200,7 @@ RUN case ${TARGETARCH} in \
         *) echo "Unsupported arch: ${TARGETARCH}" && exit 1 ;; \
     esac \
     && curl --fail --show-error --location --retry 5 --retry-all-errors --retry-delay 3 \
+        --connect-timeout 20 --max-time 180 --speed-time 30 --speed-limit 1024 \
         https://github.com/yt-dlp/yt-dlp/releases/latest/download/${YTDLP_FILE} \
         -o /usr/local/bin/yt-dlp \
     && chmod +x /usr/local/bin/yt-dlp

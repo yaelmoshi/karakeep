@@ -20,20 +20,20 @@
     "@auth/core": "^0.34.0",
     "@karakeep/shared": "workspace:*",
     "@opentelemetry/api": "^1.9.1",
-    "@paralleldrive/cuid2": "^2.3.1",
-    "dotenv": "^16.6.1",
+    "@paralleldrive/cuid2": "^3.0.0",
+    "dotenv": "^17.0.0",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "postgres": "^3.4.9",
     "tsx": "^4.21.0"
   },
   "optionalDependencies": {
-    "better-sqlite3": "^11.10.0"
+    "better-sqlite3": "^12.0.0"
   },
   "devDependencies": {
     "@karakeep/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "^7.6.13",
     "@vercel/ncc": "^0.38.4",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.0"
   }
 }

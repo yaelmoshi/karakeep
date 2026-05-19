@@ -1,4 +1,4 @@
-ARG DHI_NODE_VERSION=24.15.0
+ARG DHI_NODE_VERSION=26.1.0
 
 ################# Monolith Builder ##############
 FROM rust:1-bookworm AS monolith_builder

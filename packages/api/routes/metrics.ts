@@ -3,6 +3,7 @@ import "@karakeep/trpc/stats";
 
 import { prometheus } from "@hono/prometheus";
 import { Hono } from "hono";
+import type { Env, MiddlewareHandler } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { register } from "prom-client";
 
@@ -14,10 +15,10 @@ export const { printMetrics, registerMetrics } = prometheus({
   collectDefaultMetrics: true,
 });
 
-const app = new Hono().get(
-  "/",
-  bearerAuth({ token: serverConfig.prometheus.metricsToken }),
-  printMetrics,
-);
+const metricsAuth = bearerAuth({
+  token: serverConfig.prometheus.metricsToken,
+}) as MiddlewareHandler<Env, "/">;
+
+const app = new Hono().get("/", metricsAuth, printMetrics);
 
 export default app;

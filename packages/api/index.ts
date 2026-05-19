@@ -1,5 +1,6 @@
 import { httpInstrumentationMiddleware } from "@hono/otel";
 import { Hono } from "hono";
+import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { logger as loggerMiddleware } from "hono/logger";
 import { poweredBy } from "hono/powered-by";
@@ -29,11 +30,13 @@ import webhooks from "./routes/webhooks";
 
 await loadAllPlugins();
 
-const v1 = new Hono<{
+interface ApiEnv {
   Variables: {
     ctx: Context;
   };
-}>()
+}
+
+const v1 = new Hono<ApiEnv>()
   .route("/highlights", highlights)
   .route("/bookmarks", bookmarks)
   .route("/lists", lists)
@@ -45,12 +48,7 @@ const v1 = new Hono<{
   .route("/backups", backups)
   .route("/feeds", feeds);
 
-const app = new Hono<{
-  Variables: {
-    // This is going to be coming from the web app
-    ctx: Context;
-  };
-}>()
+const app = new Hono<ApiEnv>()
   .use(
     loggerMiddleware((str: string) => {
       logger.info(str);
@@ -65,7 +63,7 @@ if (serverConfig.tracing.enabled) {
     httpInstrumentationMiddleware({
       serviceName: `${serverConfig.tracing.serviceName}-api`,
       serviceVersion: serverConfig.serverVersion ?? "unknown",
-    }),
+    }) as MiddlewareHandler<ApiEnv, "*">,
   );
 }
 

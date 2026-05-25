@@ -75,7 +75,7 @@ overrides:
   "vite@>=7.3.0 <7.3.2": "8.0.14"
   "follow-redirects@<1.16.0": "1.16.0"
   "immutable@<5.1.5": "5.1.5"
-  "@babel/plugin-transform-modules-systemjs@<7.29.4": "7.29.4"
+  "@babel/plugin-transform-modules-systemjs@<7.29.4": "7.29.7"
   "ip-address@<=10.1.0": "10.2.0"
 patchedDependencies:
   gray-matter@4.0.3: patches/gray-matter@4.0.3.patch

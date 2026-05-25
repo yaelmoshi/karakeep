@@ -1322,7 +1322,7 @@ importers:
         version: 1.14.4
       '@restatedev/restate-sdk-clients':
         specifier: ^1.14.3
-        version: 1.14.3
+        version: 1.14.4
       async-mutex:
         specifier: ^0.5.0
         version: 0.5.0
@@ -6168,11 +6168,8 @@ packages:
   '@remusao/trie@2.1.0':
     resolution: {integrity: sha512-Er3Q8q0/2OcCJPQYJOPLmCuqO0wu7cav3SPtpjlxSbjFi1x+A1pZkkLD6c9q2rGEkGW/tkrRzfrhNMt8VQjzXg==}
 
-  '@restatedev/restate-sdk-clients@1.14.3':
-    resolution: {integrity: sha512-6g81nP2vkHUko6DOtvTeFQhouMYdUhgqtyEu2hOR4WgmF5WZdikCpD8Ysj7umKkdy/6X83pqW0hW1O9CWf3OHQ==}
-
-  '@restatedev/restate-sdk-core@1.14.3':
-    resolution: {integrity: sha512-EHyErOWtH13wrsAGNzMt1PMWtenTfji4Oc8K1KktY6m23iQ4laCgEeS67xk8aZEDIvKLiInRPX6zQfTONoDq5w==}
+  '@restatedev/restate-sdk-clients@1.14.4':
+    resolution: {integrity: sha512-MMDnfYAO6coxaKRHO388xDsLF6UysKlwjRI9Xi+U7IH/wJI/nFUCN7JdrzJr+hS3xmUITT+T6u5HKYa9yAyRQA==}
 
   '@restatedev/restate-sdk-core@1.14.4':
     resolution: {integrity: sha512-q1ukObKmcwRSznuOt73TST6kvh8mjQaWU9dmHhbWCbx2xddUsj4LiGD2MkuTfMhl42SFNCdbp6Lvew1Wy+7IlQ==}
@@ -19953,7 +19950,7 @@ snapshots:
 
   '@docusaurus/react-loadable@6.0.0(react@19.2.6)':
     dependencies:
-      '@types/react': 19.2.15
+      '@types/react': 19.2.14
       react: 19.2.6
 
   '@docusaurus/theme-classic@3.10.1(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)':
@@ -22995,11 +22992,9 @@ snapshots:
 
   '@remusao/trie@2.1.0': {}
 
-  '@restatedev/restate-sdk-clients@1.14.3':
+  '@restatedev/restate-sdk-clients@1.14.4':
     dependencies:
-      '@restatedev/restate-sdk-core': 1.14.3
-
-  '@restatedev/restate-sdk-core@1.14.3': {}
+      '@restatedev/restate-sdk-core': 1.14.4
 
   '@restatedev/restate-sdk-core@1.14.4': {}
 
@@ -24101,7 +24096,7 @@ snapshots:
   '@types/react-router@5.1.20':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 19.2.15
+      '@types/react': 19.2.14
 
   '@types/react-syntax-highlighter@15.5.13':
     dependencies:

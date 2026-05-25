@@ -38,7 +38,7 @@ overrides:
   rollup@<2.80.0: 4.60.4
   rollup@>=4 <4.59.0: 4.60.4
   dompurify@<3.4.0: 3.4.5
-  hono@<4.12.18: 4.12.21
+  hono@<4.12.18: 4.12.23
   '@hono/node-server@<1.19.13': 2.0.3
   postcss@<8.5.10: 8.5.15
   re2@<1.24.1: 1.24.1
@@ -4194,17 +4194,17 @@ packages:
     resolution: {integrity: sha512-a0jV+/HRe3G5zjFID3zObAQFdkl6zpxTuqktdDDXS3MJKcrZIkB8OkLpNBlY/WXFqv2HF4a0takPej+aNFczWA==}
     engines: {node: '>=20'}
     peerDependencies:
-      hono: 4.12.21
+      hono: 4.12.23
 
   '@hono/otel@1.1.2':
     resolution: {integrity: sha512-UaBMKPGaQTj4sjvpGqQ+57eolTwMI2znzxV/QBUF99XxhcmqtqaZX95flXpGgWb+lnlinlCy23Y1sZ8+TzzM9A==}
     peerDependencies:
-      hono: 4.12.21
+      hono: 4.12.23
 
   '@hono/prometheus@1.0.3':
     resolution: {integrity: sha512-oOBMk2yJL62l6unLkFrAct5IJejSac0yYjomxZuPqDTGKWPcmPD94zQGkLQNdzPRCOW9jEUN3QfxL0Rh5kiNOA==}
     peerDependencies:
-      hono: 4.12.21
+      hono: 4.12.23
       prom-client: ^15.0.0
 
   '@hono/trpc-server@0.4.2':
@@ -4212,12 +4212,12 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@trpc/server': ^10.10.0 || >11.0.0-rc
-      hono: 4.12.21
+      hono: 4.12.23
 
   '@hono/zod-validator@0.8.0':
     resolution: {integrity: sha512-5uS4S1/LKtZQYvD4BtpPUFkOv8d1wNxHHrChm26buMiEYc1FrHWvDUaKVBwkiVtvSExHSpLGDvcnpI2Copyj9w==}
     peerDependencies:
-      hono: 4.12.21
+      hono: 4.12.23
       zod: ^3.25.0 || ^4.0.0
 
   '@hookform/error-message@2.0.1':
@@ -10551,6 +10551,10 @@ packages:
 
   hono@4.12.21:
     resolution: {integrity: sha512-uV63apnb0kyPtAUwoWgaGh9HyIFcv8lgmzPZSiTBQAFOFGIzka5EZ1dZocmGnn0XdX0+XTqJ6Tqv7selMuGLRQ==}
+    engines: {node: '>=16.9.0'}
+
+  hono@4.12.23:
+    resolution: {integrity: sha512-eIaZ9qDgu7XV0pxOCrg7/WhnQ6Ivm22UcxhXx/A3dcbqbbYgBEkc6e/J/s7j2tS96zoB0S9VBdLwQNCWwUo4LA==}
     engines: {node: '>=16.9.0'}
 
   hookable@6.1.1:
@@ -20082,7 +20086,7 @@ snapshots:
 
   '@docusaurus/react-loadable@6.0.0(react@19.2.6)':
     dependencies:
-      '@types/react': 19.2.14
+      '@types/react': 19.2.15
       react: 19.2.6
 
   '@docusaurus/theme-classic@3.10.1(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)':
@@ -20979,6 +20983,10 @@ snapshots:
     dependencies:
       hono: 4.12.21
 
+  '@hono/node-server@2.0.3(hono@4.12.23)':
+    dependencies:
+      hono: 4.12.23
+
   '@hono/otel@1.1.2(hono@4.12.21)':
     dependencies:
       '@opentelemetry/api': 1.9.1
@@ -21610,7 +21618,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.29.0(zod@4.4.3)':
     dependencies:
-      '@hono/node-server': 2.0.3(hono@4.12.21)
+      '@hono/node-server': 2.0.3(hono@4.12.23)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -21620,7 +21628,7 @@ snapshots:
       eventsource-parser: 3.0.2
       express: 5.2.1
       express-rate-limit: 8.3.2(express@5.2.1)
-      hono: 4.12.21
+      hono: 4.12.23
       jose: 6.2.2
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.0
@@ -24228,7 +24236,7 @@ snapshots:
   '@types/react-router@5.1.20':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 19.2.14
+      '@types/react': 19.2.15
 
   '@types/react-syntax-highlighter@15.5.13':
     dependencies:
@@ -27862,6 +27870,8 @@ snapshots:
       react-is: 16.13.1
 
   hono@4.12.21: {}
+
+  hono@4.12.23: {}
 
   hookable@6.1.1: {}
 

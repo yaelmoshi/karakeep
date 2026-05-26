@@ -39,7 +39,7 @@ overrides:
   rollup@>=4 <4.59.0: 4.60.4
   dompurify@<3.4.0: 3.4.5
   hono@<4.12.18: 4.12.23
-  '@hono/node-server@<1.19.13': 2.0.3
+  '@hono/node-server@<1.19.13': 2.0.4
   postcss@<8.5.10: 8.5.15
   re2@<1.24.1: 1.24.1
   qs@<6.14.2: 6.15.2
@@ -4192,6 +4192,12 @@ packages:
 
   '@hono/node-server@2.0.3':
     resolution: {integrity: sha512-a0jV+/HRe3G5zjFID3zObAQFdkl6zpxTuqktdDDXS3MJKcrZIkB8OkLpNBlY/WXFqv2HF4a0takPej+aNFczWA==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      hono: 4.12.23
+
+  '@hono/node-server@2.0.4':
+    resolution: {integrity: sha512-Ut3y0dMMPWy6bZ2kVfx25EOVbZlm15dhF4mOsezMlhpNHy+4MkU1qN9Y6lnruYi4wPmFzimGX2X7LF/FwHli4A==}
     engines: {node: '>=20'}
     peerDependencies:
       hono: 4.12.23
@@ -20983,7 +20989,7 @@ snapshots:
     dependencies:
       hono: 4.12.21
 
-  '@hono/node-server@2.0.3(hono@4.12.23)':
+  '@hono/node-server@2.0.4(hono@4.12.23)':
     dependencies:
       hono: 4.12.23
 
@@ -21618,7 +21624,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.29.0(zod@4.4.3)':
     dependencies:
-      '@hono/node-server': 2.0.3(hono@4.12.23)
+      '@hono/node-server': 2.0.4(hono@4.12.23)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5

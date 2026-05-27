@@ -40,6 +40,6 @@
     "directory": "packages/sdk"
   },
   "dependencies": {
-    "openapi-fetch": "^0.13.8"
+    "openapi-fetch": "^0.17.0"
   }
 }

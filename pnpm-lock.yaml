@@ -60,7 +60,7 @@ overrides:
   defu@<6.1.5: 6.1.7
   vite@>=7.3.0 <7.3.2: 8.0.14
   follow-redirects@<1.16.0: 1.16.0
-  immutable@<5.1.5: 5.1.5
+  immutable@<5.1.5: 5.1.6
   '@babel/plugin-transform-modules-systemjs@<7.29.4': 7.29.7
   ip-address@<=10.1.0: 10.2.0
 
@@ -20319,7 +20319,7 @@ snapshots:
 
   '@docusaurus/react-loadable@6.0.0(react@19.2.6)':
     dependencies:
-      '@types/react': 19.2.14
+      '@types/react': 19.2.15
       react: 19.2.6
 
   '@docusaurus/theme-classic@3.10.1(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)':
@@ -24426,7 +24426,7 @@ snapshots:
   '@types/react-router@5.1.20':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 19.2.14
+      '@types/react': 19.2.15
 
   '@types/react-syntax-highlighter@15.5.13':
     dependencies:
@@ -25108,7 +25108,7 @@ snapshots:
 
   babel-plugin-macros@3.1.0:
     dependencies:
-      '@babel/runtime': 7.27.6
+      '@babel/runtime': 7.29.7
       cosmiconfig: 7.1.0
       resolve: 1.22.12
 

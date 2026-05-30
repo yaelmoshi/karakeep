@@ -26,7 +26,7 @@
     "@karakeep/shared": "workspace:^0.1.0",
     "@karakeep/shared-react": "workspace:^0.1.0",
     "@karakeep/trpc": "workspace:^0.1.0",
-    "@react-native-async-storage/async-storage": "3.1.0",
+    "@react-native-async-storage/async-storage": "3.1.1",
     "@react-native-community/slider": "^5.1.2",
     "@react-native-menu/menu": "^2.0.0",
     "@react-navigation/native": "^7.1.8",

@@ -264,9 +264,9 @@ chrome.contextMenus.onClicked.addListener(handleContextMenuClick);
 /**
  * Handle command events, such as adding a link to karakeep.
  * @param command The command to handle.
- * @param tab The current tab.
+ * @param tab The current tab, if the browser provided one.
  */
-function handleCommand(command: string, tab: chrome.tabs.Tab) {
+function handleCommand(command: string, tab?: chrome.tabs.Tab) {
   if (command === ADD_LINK_TO_KARAKEEP_ID) {
     addLinkToKarakeep({
       selectionText: undefined,

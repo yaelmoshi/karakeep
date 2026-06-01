@@ -44,7 +44,7 @@ overrides:
   re2@<1.24.1: 1.24.1
   qs@<6.14.2: 6.15.2
   yaml@<2.8.3: 2.9.0
-  js-yaml@<4.1.1: 4.1.1
+  js-yaml@<4.1.1: 4.2.0
   markdown-it@<12.3.2: 14.2.0
   esbuild@<0.28.0: 0.28.0
   cookie@<0.7.0: 1.1.1
@@ -11207,6 +11207,10 @@ packages:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
 
+  js-yaml@4.2.0:
+    resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
+    hasBin: true
+
   jsc-safe-url@0.2.4:
     resolution: {integrity: sha512-0wM3YBWtYePOjfyXQH5MWQ8H7sdk5EXSwZvmSLKk2RboVQ2Bu239jycHDz5J/8Blf3K0Qnoy2b6xD+z10MFB+Q==}
 
@@ -20328,7 +20332,7 @@ snapshots:
       '@types/react-router-config': 5.0.11
       combine-promises: 1.2.0
       fs-extra: 11.3.5
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       lodash: 4.18.1
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
@@ -20884,7 +20888,7 @@ snapshots:
       '@docusaurus/utils-common': 3.10.1(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.15))(html-minifier-terser@7.2.0)(postcss@8.5.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       fs-extra: 11.3.5
       joi: 17.13.3
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       lodash: 4.18.1
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -20918,7 +20922,7 @@ snapshots:
       globby: 11.1.0
       gray-matter: 4.0.3(patch_hash=0e2b238ee6601ee9b92d68bebc85640d09c5c5fb08f0d4d1b832a6084098ff73)
       jiti: 1.21.7
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       lodash: 4.18.1
       micromatch: 4.0.8
       p-queue: 6.6.2
@@ -21514,7 +21518,7 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.29.0
       chalk: 4.1.2
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
 
   '@faker-js/faker@5.5.3': {}
 
@@ -23688,7 +23692,7 @@ snapshots:
       ajv-formats: 3.0.1(@redocly/ajv@8.18.1)
       colorette: 1.4.0
       js-levenshtein: 1.1.6
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       picomatch: 4.0.4
       pluralize: 8.0.0
       yaml-ast-parser: 0.0.43
@@ -26410,7 +26414,7 @@ snapshots:
   cosmiconfig@8.3.6(typescript@6.0.3):
     dependencies:
       import-fresh: 3.3.1
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
@@ -28221,7 +28225,7 @@ snapshots:
 
   gray-matter@4.0.3(patch_hash=0e2b238ee6601ee9b92d68bebc85640d09c5c5fb08f0d4d1b832a6084098ff73):
     dependencies:
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       kind-of: 6.0.3
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
@@ -29087,6 +29091,10 @@ snapshots:
   js-tokens@4.0.0: {}
 
   js-yaml@4.1.1:
+    dependencies:
+      argparse: 2.0.1
+
+  js-yaml@4.2.0:
     dependencies:
       argparse: 2.0.1
 
@@ -31125,7 +31133,7 @@ snapshots:
       async: 3.2.6
       commander: 2.20.3
       graphlib: 2.1.8
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       json-pointer: 0.6.2
       json-schema-merge-allof: 0.8.1
       lodash: 4.18.1

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Platform } from "react-native";
-import * as NavigationBar from "expo-navigation-bar";
+import * as ExpoNavigationBar from "expo-navigation-bar";
 import useAppSettings from "@/lib/settings";
 import { COLORS } from "@/theme/colors";
 import { useColorScheme as useNativewindColorScheme } from "nativewind";
@@ -46,7 +46,8 @@ function useInitialAndroidBarSync() {
 export { useColorScheme, useInitialAndroidBarSync };
 
 function setNavigationBar(colorScheme: "light" | "dark") {
-  return NavigationBar.setButtonStyleAsync(
+  ExpoNavigationBar.NavigationBar.setStyle(
     colorScheme === "dark" ? "light" : "dark",
   );
+  return Promise.resolve();
 }

@@ -1,17 +1,18 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
-import pwa from "next-pwa";
+import withSerwistInit from "@serwist/next";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const withPWA = pwa({
-  dest: "public",
+const withSerwist = withSerwistInit({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
   disable: process.env.NODE_ENV != "production",
 });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = withPWA({
+const nextConfig = withSerwist({
   output: "standalone",
   webpack: (config) => {
     config.module.rules.push({

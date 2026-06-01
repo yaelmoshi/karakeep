@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@karakeep/tsconfig": "workspace:^0.1.0",
-    "@types/bcryptjs": "^3.0.0",
     "@types/deep-equal": "^1.0.4",
     "@types/nodemailer": "^8.0.0",
     "vite-tsconfig-paths": "^6.1.1",

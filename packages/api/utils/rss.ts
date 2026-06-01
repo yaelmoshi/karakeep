@@ -1,4 +1,4 @@
-import RSS from "rss";
+import { Feed } from "feed";
 
 import serverConfig from "@karakeep/shared/config";
 import {
@@ -16,12 +16,16 @@ export function toRSS(
   },
   bookmarks: ZPublicBookmark[],
 ) {
-  const feed = new RSS({
+  const feed = new Feed({
+    id: params.siteUrl,
     title: params.title,
-    feed_url: params.feedUrl,
-    site_url: params.siteUrl,
+    link: params.siteUrl,
+    feedLinks: {
+      rss: params.feedUrl,
+    },
     description: params.description,
     generator: "Karakeep",
+    copyright: "",
   });
 
   bookmarks
@@ -31,24 +35,24 @@ export function toRSS(
         b.content.type === BookmarkTypes.ASSET,
     )
     .forEach((bookmark) => {
-      feed.item({
+      feed.addItem({
         date: bookmark.createdAt,
         title: bookmark.title ?? "",
-        url:
+        link:
           bookmark.content.type === BookmarkTypes.LINK
             ? bookmark.content.url
             : bookmark.content.type === BookmarkTypes.ASSET
               ? `${serverConfig.publicUrl}${getAssetUrl(bookmark.content.assetId)}`
               : "",
-        guid: bookmark.id,
+        id: bookmark.id,
         author:
           bookmark.content.type === BookmarkTypes.LINK
-            ? (bookmark.content.author ?? undefined)
+            ? [{ name: bookmark.content.author ?? undefined }]
             : undefined,
-        categories: bookmark.tags,
+        category: bookmark.tags.map((name) => ({ name })),
         description: bookmark.description ?? "",
       });
     });
 
-  return feed.xml({ indent: true });
+  return feed.rss2();
 }

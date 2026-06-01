@@ -1,6 +1,6 @@
 import type { Index } from "meilisearch";
 import { Mutex } from "async-mutex";
-import { MeiliSearch } from "meilisearch";
+import { Meilisearch } from "meilisearch";
 
 import type {
   BookmarkSearchDocument,
@@ -297,14 +297,14 @@ class MeiliSearchIndexClient implements SearchIndexClient {
 }
 
 export class MeiliSearchProvider implements PluginProvider<SearchIndexClient> {
-  private client: MeiliSearch | undefined;
+  private client: Meilisearch | undefined;
   private indexClient: SearchIndexClient | undefined;
   private initPromise: Promise<SearchIndexClient | null> | undefined;
   private readonly indexName = "bookmarks";
 
   constructor() {
     if (MeiliSearchProvider.isConfigured()) {
-      this.client = new MeiliSearch({
+      this.client = new Meilisearch({
         host: envConfig.MEILI_ADDR!,
         apiKey: envConfig.MEILI_MASTER_KEY,
       });

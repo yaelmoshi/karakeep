@@ -62,7 +62,7 @@ steps:
       - event: push
         branch: main
     failure: ignore
-    image: dhi.io/trivy:0.70.0-alpine3.23-dev@sha256:6ec5df532f87e67fb14dfed5a006d036dbcf10bcf993eacfb8bad3eeea7f98d3
+    image: dhi.io/trivy:0.70.0-alpine3.23-dev@sha256:caefdb66517f23ffb0b0ccefd6a4c4f8cc64a73766cd63ffee72e6c759f89952
     environment:
       IMAGE_REF: ghcr.io/yaelmoshi/karakeep:${CI_COMMIT_SHA:0:8}
     commands:

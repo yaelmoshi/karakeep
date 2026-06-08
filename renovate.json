@@ -48,14 +48,16 @@
       "prPriority": 20
     },
     {
-      "description": "Batch the production web, worker, database, shared, and API packages that affect the deployed Karakeep app.",
+      "description": "Batch the production web, worker, API, plugin, database, shared, and tRPC packages that affect the deployed Karakeep app.",
       "matchManagers": [
         "npm"
       ],
       "matchFileNames": [
         "apps/web/package.json",
         "apps/workers/package.json",
+        "packages/api/package.json",
         "packages/db/package.json",
+        "packages/plugins/package.json",
         "packages/shared/package.json",
         "packages/shared-server/package.json",
         "packages/trpc/package.json"
@@ -103,14 +105,24 @@
       "prPriority": -5
     },
     {
-      "description": "Batch repository tooling, CLI, MCP, lint, format, build, and test dependencies.",
+      "description": "Batch repository tooling, CLI, MCP, SDK, OpenAPI, benchmark, lint, format, build, and test dependencies.",
       "matchManagers": [
         "npm"
       ],
       "matchFileNames": [
         "package.json",
         "apps/cli/package.json",
-        "apps/mcp/package.json"
+        "apps/mcp/package.json",
+        "packages/benchmarks/package.json",
+        "packages/e2e_tests/package.json",
+        "packages/open-api/package.json",
+        "packages/sdk/package.json",
+        "tooling/github/package.json",
+        "tooling/oxlint/package.json",
+        "tooling/prettier/package.json",
+        "tooling/tailwind/package.json",
+        "tooling/typescript/package.json",
+        "tools/compare-models/package.json"
       ],
       "matchUpdateTypes": [
         "patch",

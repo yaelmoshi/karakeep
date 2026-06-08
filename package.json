@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "karakeep",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "build": "turbo --no-daemon build",
@@ -27,22 +27,12 @@
     "preflight:fix": "turbo run --no-daemon typecheck lint:fix format:fix"
   },
   "devDependencies": {
-    "@types/node": "^25.0.0",
+    "@types/node": "^25.9.2",
     "husky": "^9.1.7",
-    "oxfmt": "^0.53.0",
-    "oxlint": "^1.64.0",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
     "sherif": "^1.11.1",
-    "turbo": "^2.9.14"
+    "turbo": "^2.9.16"
   },
-  "packageManager": "pnpm@11.5.1",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "re2"
-    ],
-    "patchedDependencies": {
-      "xcode@3.0.1": "patches/xcode@3.0.1.patch",
-      "playwright-extra@4.3.6": "patches/playwright-extra@4.3.6.patch"
-    }
-  }
+  "packageManager": "pnpm@11.5.1"
 }

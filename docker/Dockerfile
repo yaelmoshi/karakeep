@@ -125,6 +125,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Postgres-only images must not install native SQLite dependencies.
 RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm install --no-frozen-lockfile --config.package-import-method=copy --config.allow-unused-patches=true
+RUN rm -rf node_modules/better-sqlite3 node_modules/.pnpm/better-sqlite3@*
 RUN node -e "try { require.resolve('better-sqlite3'); process.exit(1); } catch { process.exit(0); }"
 
 COPY . .

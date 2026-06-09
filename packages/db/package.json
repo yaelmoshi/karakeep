@@ -33,7 +33,7 @@
   "devDependencies": {
     "@karakeep/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "^7.6.13",
-    "@vercel/ncc": "^0.38.4",
+    "@vercel/ncc": "^0.44.0",
     "vitest": "^4.0.0"
   }
 }

@@ -1,11 +1,10 @@
 import dns from "node:dns/promises";
 import { Readable } from "node:stream";
-import type { HeadersInit, RequestInit, Response } from "node-fetch";
 import { HttpProxyAgent } from "http-proxy-agent";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import ipaddr from "ipaddr.js";
 import { LRUCache } from "lru-cache";
-import fetch, { Headers } from "node-fetch";
+import * as undici from "undici";
 
 import serverConfig from "@karakeep/shared/config";
 import logger from "@karakeep/shared/logger";
@@ -296,7 +295,38 @@ export function getProxyAgent(url: string, runProxy?: RunProxyConfig) {
   return undefined;
 }
 
-function cloneHeaders(init?: HeadersInit): Headers {
+function getFetchDispatcher(url: string, runProxy?: RunProxyConfig) {
+  const httpProxy = runProxy
+    ? runProxy.httpProxy
+    : serverConfig.proxy.httpProxy
+      ? getRandomProxy(serverConfig.proxy.httpProxy)
+      : undefined;
+  const httpsProxy = runProxy
+    ? runProxy.httpsProxy
+    : serverConfig.proxy.httpsProxy
+      ? getRandomProxy(serverConfig.proxy.httpsProxy)
+      : undefined;
+  const noProxy = runProxy ? runProxy.noProxy : serverConfig.proxy.noProxy;
+
+  if (!httpProxy && !httpsProxy) {
+    return undefined;
+  }
+
+  const urlObj = new URL(url);
+
+  if (noProxy && matchesNoProxy(url, noProxy)) {
+    return undefined;
+  }
+
+  const proxyUrl =
+    urlObj.protocol === "https:"
+      ? httpsProxy ?? httpProxy
+      : httpProxy ?? httpsProxy;
+
+  return proxyUrl ? new undici.ProxyAgent(proxyUrl) : undefined;
+}
+
+function cloneHeaders(init?: undici.HeadersInit): Headers {
   const headers = new Headers();
   if (!init) {
     return headers;
@@ -326,7 +356,9 @@ function cloneHeaders(init?: HeadersInit): Headers {
   return headers;
 }
 
-function isRedirectResponse(response: Response): boolean {
+type FetchResponseLike = Pick<undici.Response, "status" | "headers" | "body">;
+
+function isRedirectResponse(response: FetchResponseLike): boolean {
   return (
     response.status === 301 ||
     response.status === 302 ||
@@ -336,7 +368,7 @@ function isRedirectResponse(response: Response): boolean {
   );
 }
 
-function closeResponseBody(response: Response): void {
+function closeResponseBody(response: FetchResponseLike): void {
   const body: unknown = response.body;
   if (!body) {
     return;
@@ -353,18 +385,18 @@ function closeResponseBody(response: Response): void {
 }
 
 export type FetchWithProxyOptions = Omit<
-  RequestInit & {
+  undici.RequestInit & {
     maxRedirects?: number;
   },
-  "agent"
+  "dispatcher"
 >;
 
 interface PreparedFetchOptions {
   maxRedirects: number;
   baseHeaders: Headers;
   method: string;
-  body?: RequestInit["body"];
-  baseOptions: RequestInit;
+  body?: undici.RequestInit["body"];
+  baseOptions: Omit<undici.RequestInit, "dispatcher">;
 }
 
 export function prepareFetchOptions(
@@ -379,7 +411,7 @@ export function prepareFetchOptions(
     ...restOptions
   } = options;
 
-  const baseOptions = restOptions as RequestInit;
+  const baseOptions = restOptions as Omit<undici.RequestInit, "dispatcher">;
 
   return {
     maxRedirects,
@@ -392,25 +424,25 @@ export function prepareFetchOptions(
 
 interface BuildFetchOptionsInput {
   method: string;
-  body?: RequestInit["body"];
+  body?: undici.RequestInit["body"];
   headers: Headers;
-  agent?: RequestInit["agent"];
-  baseOptions: RequestInit;
+  dispatcher?: undici.Dispatcher;
+  baseOptions: Omit<undici.RequestInit, "dispatcher">;
 }
 
 export function buildFetchOptions({
   method,
   body,
   headers,
-  agent,
+  dispatcher,
   baseOptions,
-}: BuildFetchOptionsInput): RequestInit {
+}: BuildFetchOptionsInput): undici.RequestInit {
   return {
     ...baseOptions,
     method,
     body,
     headers,
-    agent,
+    dispatcher,
     redirect: "manual",
   };
 }
@@ -434,22 +466,22 @@ export const fetchWithProxy = async (
   let currentBody = preparedBody;
 
   while (true) {
-    const agent = getProxyAgent(currentUrl, runProxy);
+    const dispatcher = getFetchDispatcher(currentUrl, runProxy);
 
-    const validation = await validateUrl(currentUrl, !!agent);
+    const validation = await validateUrl(currentUrl, !!dispatcher);
     if (!validation.ok) {
       throw new Error(validation.reason);
     }
     const requestUrl = validation.url;
     currentUrl = requestUrl.toString();
 
-    const response = await fetch(
+    const response = await undici.fetch(
       currentUrl,
       buildFetchOptions({
         method: currentMethod,
         body: currentBody,
         headers: baseHeaders,
-        agent,
+        dispatcher,
         baseOptions,
       }),
     );
@@ -508,8 +540,8 @@ export async function resolveValidatedRedirectUrl(
           options.signal as globalThis.AbortSignal,
         ])
       : AbortSignal.timeout(5000);
-    const agent = getProxyAgent(currentUrl, runProxy);
-    const validation = await validateUrl(currentUrl, !!agent);
+    const dispatcher = getFetchDispatcher(currentUrl, runProxy);
+    const validation = await validateUrl(currentUrl, !!dispatcher);
     if (!validation.ok) {
       throw new Error(validation.reason);
     }
@@ -517,15 +549,15 @@ export async function resolveValidatedRedirectUrl(
     const requestUrl = validation.url;
     currentUrl = requestUrl.toString();
 
-    const response = await fetch(
+    const response = await undici.fetch(
       currentUrl,
       buildFetchOptions({
         method: "GET",
         headers: baseHeaders,
-        agent,
+        dispatcher,
         baseOptions: {
           ...baseOptions,
-          signal: signal as RequestInit["signal"],
+          signal,
         },
       }),
     );

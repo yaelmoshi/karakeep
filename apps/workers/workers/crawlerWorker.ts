@@ -84,6 +84,7 @@ import { getRateLimitClient } from "@karakeep/shared/ratelimiting";
 import { tryCatch } from "@karakeep/shared/tryCatch";
 import { BookmarkTypes } from "@karakeep/shared/types/bookmarks";
 import { WebhooksService } from "@karakeep/trpc/models/webhooks.service";
+import type { Response as UndiciResponse } from "undici";
 
 import type {
   ParseSubprocessError,
@@ -201,6 +202,18 @@ const activeContexts = new Map<
 
 const CONTEXT_CLOSE_TIMEOUT_MS = 10_000;
 const PAGE_CLOSE_TIMEOUT_MS = 5_000;
+
+function getResponseContentLength(
+  response: Pick<UndiciResponse, "headers">,
+): number | undefined {
+  const contentLength = response.headers.get("content-length");
+  if (!contentLength) {
+    return undefined;
+  }
+
+  const parsed = Number(contentLength);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
 
 function getHeaderValue(
   headers: { name: string; value: string }[] | undefined,
@@ -502,8 +515,9 @@ async function browserlessCrawlPage(
         },
         runProxy,
       );
+      const responseSize = getResponseContentLength(response);
       logger.info(
-        `[Crawler][${jobId}] Successfully fetched the content of "${truncateUrl(url)}". Status: ${response.status}, Size: ${response.size}`,
+        `[Crawler][${jobId}] Successfully fetched the content of "${truncateUrl(url)}". Status: ${response.status}, Size: ${responseSize ?? "unknown"}`,
       );
       return {
         htmlContent: await response.text(),

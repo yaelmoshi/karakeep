@@ -210,8 +210,9 @@ RUN case ${TARGETARCH} in \
         -o /usr/local/bin/yt-dlp \
     && chmod +x /usr/local/bin/yt-dlp
 
-# Copy monolith binary from builder
-COPY --from=monolith_builder /usr/local/cargo/bin/monolith /usr/local/bin/monolith
+# Copy monolith binary from builder.
+# cargo installs executables under /root/.cargo/bin in this stage.
+COPY --from=monolith_builder /root/.cargo/bin/monolith /usr/local/bin/monolith
 
 ######################
 # Prepare the web app

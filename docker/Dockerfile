@@ -16,6 +16,8 @@ FROM dhi.io/node:${DHI_NODE_VERSION}-debian13-dev AS base
 WORKDIR /app
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+# CI image builds can opt out of pnpm's minimumReleaseAge gate without weakening normal installs.
+ARG PNPM_MINIMUM_RELEASE_AGE=0
 
 # https://github.com/karakeep-app/karakeep/issues/967
 RUN npm install -g corepack@0.31.0 && corepack enable
@@ -53,7 +55,7 @@ COPY ./patches ./patches
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Avoid pnpm hardlink collisions in Docker while preserving the repo's hoisted workspace layout.
-RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm install --frozen-lockfile --config.package-import-method=copy --config.allow-unused-patches=true
+RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm install --frozen-lockfile --config.package-import-method=copy --config.allow-unused-patches=true --config.minimumReleaseAge=${PNPM_MINIMUM_RELEASE_AGE}
 
 COPY . .
 
@@ -76,7 +78,7 @@ RUN (cd apps/cli && /app/node_modules/.bin/vite build && chmod +x dist/index.mjs
 # Build the mcp server
 RUN (cd apps/mcp && /app/node_modules/.bin/vite build && /app/node_modules/.bin/shx chmod +x dist/index.js)
 
-RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers --config.allow-unused-patches=true
+RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers --config.allow-unused-patches=true --config.minimumReleaseAge=${PNPM_MINIMUM_RELEASE_AGE}
 
 ################# Postgres-only Base Builder ##############
 FROM dhi.io/node:${DHI_NODE_VERSION}-debian13-dev AS base_postgres
@@ -84,6 +86,8 @@ FROM dhi.io/node:${DHI_NODE_VERSION}-debian13-dev AS base_postgres
 WORKDIR /app
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+# CI image builds can opt out of pnpm's minimumReleaseAge gate without weakening normal installs.
+ARG PNPM_MINIMUM_RELEASE_AGE=0
 
 # https://github.com/karakeep-app/karakeep/issues/967
 RUN npm install -g corepack@0.31.0 && corepack enable
@@ -124,7 +128,7 @@ ENV DB_DRIVER=postgres
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Postgres-only images must not install native SQLite dependencies.
-RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm install --no-frozen-lockfile --config.package-import-method=copy --config.allow-unused-patches=true
+RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm install --no-frozen-lockfile --config.package-import-method=copy --config.allow-unused-patches=true --config.minimumReleaseAge=${PNPM_MINIMUM_RELEASE_AGE}
 RUN rm -rf node_modules/better-sqlite3 node_modules/.pnpm/better-sqlite3@*
 RUN node -e "try { require.resolve('better-sqlite3'); process.exit(1); } catch { process.exit(0); }"
 
@@ -138,7 +142,7 @@ RUN cd packages/db && \
 
 RUN (cd apps/web && CIRCLE_NODE_TOTAL=2 /app/node_modules/.bin/next build --webpack --experimental-build-mode compile)
 RUN (cd apps/workers && /app/node_modules/.bin/tsdown)
-RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers --config.allow-unused-patches=true
+RUN DEVELOPMENT_SKIP_GETTING_ASSET=1 pnpm --prefer-offline deploy --legacy --node-linker=isolated --filter @karakeep/workers --prod /prod/workers --config.allow-unused-patches=true --config.minimumReleaseAge=${PNPM_MINIMUM_RELEASE_AGE}
 
 ################# The All-in-one builder ##############
 

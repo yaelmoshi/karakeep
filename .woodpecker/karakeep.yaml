@@ -15,6 +15,10 @@ steps:
     environment:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
       PNPM_STORE_DIR: /pnpm/store
+      CI: "true"
+      NPM_CONFIG_CONFIRM_MODULES_PURGE: "false"
+      # Keep default pnpm minimumReleaseAge for normal installs, but force deterministic CI preflight.
+      NPM_CONFIG_MINIMUM_RELEASE_AGE: "0"
       TURBO_CACHE_DIR: /tmp/karakeep-turbo
       TURBO_TELEMETRY_DISABLED: "1"
     commands:
@@ -22,8 +26,8 @@ steps:
       - tar --exclude=.git --exclude=node_modules --exclude=.turbo -cf - . | tar -C /tmp/karakeep-ci -xf -
       - cd /tmp/karakeep-ci
       - pnpm config set store-dir "$PNPM_STORE_DIR"
-      - pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
-      - pnpm exec turbo run --no-daemon --concurrency=1 typecheck lint format
+      - pnpm install --frozen-lockfile --prefer-offline --ignore-scripts --config.minimumReleaseAge="$NPM_CONFIG_MINIMUM_RELEASE_AGE"
+      - pnpm --config.minimumReleaseAge="$NPM_CONFIG_MINIMUM_RELEASE_AGE" exec turbo run --no-daemon --concurrency=1 typecheck lint format
 
   - name: build-and-push-ghcr
     when:

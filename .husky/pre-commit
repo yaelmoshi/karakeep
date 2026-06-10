@@ -1,3 +1,3 @@
-pnpm preflight
+CI=true NPM_CONFIG_CONFIRM_MODULES_PURGE=false pnpm --config.minimumReleaseAge=0 exec turbo run --no-daemon typecheck lint format
 pnpm exec sherif
 pnpm run --filter @karakeep/open-api check

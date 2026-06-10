@@ -4,7 +4,7 @@ import { stat, unlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createId } from "@paralleldrive/cuid2";
-import archiver from "archiver";
+import { ZipArchive } from "archiver";
 import { and, eq, inArray } from "drizzle-orm";
 import { workerStatsCounter } from "metrics";
 import cron from "node-cron";
@@ -416,7 +416,7 @@ async function createZipArchiveFromFile(
   outputPath: string,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    const archive = archiver("zip", {
+    const archive = new ZipArchive({
       zlib: { level: 9 }, // Maximum compression
     });
 

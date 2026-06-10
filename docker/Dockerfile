@@ -1,7 +1,7 @@
-ARG DHI_NODE_VERSION=26.1.0
+ARG DHI_NODE_VERSION=26.3.0
 
 ################# Monolith Builder ##############
-FROM rust:1-bookworm AS monolith_builder
+FROM dhi.io/rust:1.96.0-debian13-dev AS monolith_builder
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \

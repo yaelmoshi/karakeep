@@ -11,7 +11,7 @@ steps:
     when:
       - event: manual
       - event: pull_request
-    image: harbor.m0sh1.cc/apps/karakeep-node-ci-deps:ed310d1b@sha256:3b112e55dedc6b021dc8be1dfa25d6f77d95c981c0ee003f1fdc82901c3b3c8a
+    image: dhi.io/node:26.3.0-debian13-dev
     environment:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
       PNPM_STORE_DIR: /pnpm/store
@@ -21,6 +21,7 @@ steps:
       - mkdir -p /tmp/karakeep-ci "$TURBO_CACHE_DIR"
       - tar --exclude=.git --exclude=node_modules --exclude=.turbo -cf - . | tar -C /tmp/karakeep-ci -xf -
       - cd /tmp/karakeep-ci
+      - npm install -g corepack@0.31.0 && corepack enable
       - pnpm config set store-dir "$PNPM_STORE_DIR"
       - pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
       - pnpm exec turbo run --no-daemon --concurrency=1 typecheck lint format

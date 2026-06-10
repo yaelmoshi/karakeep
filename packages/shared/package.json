@@ -9,7 +9,7 @@
     "glob": "13.0.6",
     "html-to-text": "^10.0.0",
     "js-tiktoken": "^1.0.21",
-    "nodemailer": "8.0.10",
+    "nodemailer": "8.0.11",
     "ollama": "^0.6.0",
     "openai": "^6.37.0",
     "typescript-parsec": "^0.3.4",

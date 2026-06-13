@@ -67,7 +67,7 @@ steps:
       - event: push
         branch: main
     failure: ignore
-    image: dhi.io/trivy:0.71.0-alpine3.23-dev@sha256:081c285d76442d196ac8bd9bd415f838b0e7186944702884d236ad2322f23aab
+    image: dhi.io/trivy:0.71.0-alpine3.23-dev@sha256:65bef60168a37a5b958899db950a6d4b8b368e373981744a83730f0870b9f8cc
     environment:
       IMAGE_REF: ghcr.io/yaelmoshi/karakeep:${CI_COMMIT_SHA:0:8}
     commands:
@@ -80,7 +80,7 @@ steps:
       - event: push
         branch: main
     failure: ignore
-    image: dhi.io/syft:1.45.1-alpine3.23-dev@sha256:15555e3a8638a080c9c697f75ed5111d3061198f6de47b8464f953c5edc1046d
+    image: dhi.io/syft:1.45.1-alpine3.23-dev@sha256:189f802a4f7196ba44308de660b7abdffd9b347380f8b7938ea2ddbb027d7dbb
     environment:
       IMAGE_REF: ghcr.io/yaelmoshi/karakeep:${CI_COMMIT_SHA:0:8}
     commands:

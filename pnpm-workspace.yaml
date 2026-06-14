@@ -49,7 +49,7 @@ overrides:
   "lodash@<4.18.1": "4.18.1"
   "serialize-javascript@<7.0.5": "7.0.5"
   "drizzle-orm@<0.45.2": "0.45.2"
-  "rollup@<2.80.0": "4.61.1"
+  "rollup@<2.80.0": "4.62.0"
   "rollup@>=4 <4.59.0": "4.61.1"
   "dompurify@<3.4.0": "3.4.10"
   "hono@<4.12.18": "4.12.25"
